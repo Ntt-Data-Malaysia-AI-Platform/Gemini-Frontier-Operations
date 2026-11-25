@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gemini Use Case Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* VOICE work, shown to customers: polished, calm, premium
+   IDEA liquid glass control room: frosted panes floating over slow-moving NTT DATA blue light
+   PICTURE login: agent network around the Gemini core; home: impact/ease matrix; behind the scenes: 7-stage request route with live trace
+   COLOUR deep night navy #040720 (light: ice #e8f0fb), NTT DATA blue #0072bc, cyan #00b4e6, coral for exceptions
+   TYPE Inter Tight 700 display, Inter text, JetBrains Mono for traces only
+   LAYOUT floating glass sidebar + content; workspace and trace split on laptop, stacked on phone */
+:root{color-scheme:light dark;--base:light-dark(#e6eefa,#040720);--ink:light-dark(#0a1030,#eef2ff);--muted:light-dark(#46527a,#aab4d8);--glass:light-dark(rgba(255,255,255,.62),rgba(255,255,255,.085));--glass2:light-dark(rgba(255,255,255,.34),rgba(255,255,255,.025));--edge:light-dark(rgba(255,255,255,.9),rgba(255,255,255,.17));--line:light-dark(rgba(10,40,110,.12),rgba(255,255,255,.11));--hi:light-dark(rgba(255,255,255,1),rgba(255,255,255,.32));--shadow:light-dark(rgba(20,60,140,.2),rgba(0,0,0,.55));--blue:light-dark(#0062a8,#62c4ff);--cyan:#00b4e6;--logo:light-dark(#0072bc,#ffffff);--b1:light-dark(#8cc8f5,#0b22b0);--b2:light-dark(#b4ecfa,#0072bc);--b3:light-dark(#a9bdf7,#1530d8);--b4:light-dark(#d2f3ff,#00a2d4);--ok:light-dark(#0f7d55,#57e0a6);--warn:light-dark(#c03a26,#ff8a75);--chip:light-dark(rgba(0,114,188,.1),rgba(98,196,255,.13));--field:light-dark(rgba(255,255,255,.7),rgba(255,255,255,.06))}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+body.night{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{height:100%}
+body{margin:0;background:var(--base);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow:hidden}
+h1,h2,h3{font-family:"Inter Tight",Inter,sans-serif;letter-spacing:-.02em;line-height:1.08;margin:0;text-wrap:balance}
+h1{font-size:clamp(30px,3.6vw,44px)}h2{font-size:21px}h3{font-size:16px}
+p{margin:0 0 10px}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+a{color:var(--blue)}
+.liquid{position:fixed;inset:0;z-index:0;overflow:hidden;background:var(--base);pointer-events:none}
+.liquid i{position:absolute;width:70vmax;height:70vmax;border-radius:50%;opacity:.9;animation:fl 28s ease-in-out infinite alternate}
+.liquid i:nth-child(1){left:-22vmax;top:-26vmax;background:radial-gradient(circle,var(--b1) 0,transparent 62%)}
+.liquid i:nth-child(2){right:-26vmax;top:-10vmax;background:radial-gradient(circle,var(--b2) 0,transparent 60%);animation-duration:34s;animation-delay:-8s}
+.liquid i:nth-child(3){left:18vmax;bottom:-40vmax;background:radial-gradient(circle,var(--b3) 0,transparent 60%);animation-duration:40s;animation-delay:-14s}
+.liquid i:nth-child(4){right:-10vmax;bottom:-30vmax;width:50vmax;height:50vmax;background:radial-gradient(circle,var(--b4) 0,transparent 60%);animation-duration:30s;animation-delay:-20s;opacity:.55}
+@keyframes fl{0%{transform:translate(0,0) scale(1)}50%{transform:translate(6vmax,4vmax) scale(1.12)}100%{transform:translate(-4vmax,7vmax) scale(.94)}}
+.glass{position:relative;background:linear-gradient(150deg,var(--glass),var(--glass2));-webkit-backdrop-filter:blur(26px) saturate(170%);backdrop-filter:blur(26px) saturate(170%);border:1px solid var(--edge);border-radius:20px;box-shadow:inset 0 1px 0 var(--hi),inset 1px 0 0 rgba(255,255,255,.06),0 12px 40px -14px var(--shadow)}
+.hov{transition:transform .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s,border-color .28s}
+.hov::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(260px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.3),transparent 62%);opacity:0;transition:opacity .28s}
+.hov:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.55);box-shadow:inset 0 1px 0 var(--hi),0 22px 54px -16px var(--shadow),0 0 0 1px color-mix(in srgb,var(--cyan) 30%,transparent)}
+.hov:hover::after{opacity:1}
+.logo{display:block;fill:var(--logo);height:auto}
+.btn{position:relative;min-height:44px;padding:0 20px;border-radius:999px;border:0;color:#fff;font-weight:600;background:linear-gradient(180deg,#38b4f5 0,#0a82cf 45%,#0062a8 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 -3px 8px rgba(0,30,80,.3),0 8px 20px -8px rgba(0,114,188,.8);transition:transform .2s,box-shadow .2s;white-space:nowrap}
+.btn:hover{transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.7),inset 0 -3px 8px rgba(0,30,80,.3),0 10px 28px -6px rgba(0,180,230,.9)}
+.btn:disabled{opacity:.45;cursor:default;transform:none}
+.ghost{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--edge);background:var(--field);font-weight:500;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:inset 0 1px 0 var(--hi);transition:border-color .2s,background .2s;white-space:nowrap}
+.ghost:hover{border-color:var(--cyan)}
+.ghost[aria-pressed=true]{color:var(--blue);border-color:var(--blue)}
+.field{min-height:46px;padding:0 14px;border:1px solid var(--edge);border-radius:14px;background:var(--field);font-size:16px;width:100%;box-shadow:inset 0 1px 3px rgba(0,0,0,.08)}
+.field:focus{border-color:var(--cyan);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--cyan) 25%,transparent)}
+.muted{color:var(--muted)}.fine{font-size:13px;color:var(--muted)}.note{font-size:13px;color:var(--muted)}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);border-bottom:1px solid var(--line);padding:8px 10px;white-space:nowrap}
+td{border-bottom:1px solid var(--line);padding:8px 10px;vertical-align:top}
+td.n,th.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.fig{position:relative;min-height:340px}.fig>svg{position:absolute;inset:0;width:100%;height:100%}
+/* login */
+.login{position:relative;z-index:1;height:100%;overflow-y:auto;display:grid;grid-template-columns:minmax(320px,460px) minmax(0,1fr);gap:24px;padding:clamp(16px,3vw,40px)}
+.lg-card{align-self:center;padding:clamp(24px,3vw,40px);display:grid;gap:18px;border-radius:28px}
+.lg-card .logo{width:190px}
+.lg-card h1{font-size:clamp(28px,3vw,38px)}
+#lf{display:grid;gap:8px}
+#lf label{font-weight:600;font-size:14px}
+.pw{display:flex;gap:8px}
+.err{min-height:20px;color:var(--warn);font-size:14px}
+#lf .btn{margin-top:8px;width:100%}
+.lg-fig{min-height:420px}
+.lg-fig svg text{font:600 14px Inter,sans-serif;fill:var(--ink)}
+/* app */
+#app{position:relative;z-index:1;height:100%;display:grid;grid-template-columns:268px minmax(0,1fr)}
+#app[hidden],.login[hidden]{display:none}
+.side{margin:14px 0 14px 14px;padding:20px 12px;display:flex;flex-direction:column;gap:3px;overflow-y:auto;border-radius:24px}
+.side .logo{width:132px;margin:2px 10px 4px}
+.side .sub{font-size:13px;color:var(--muted);padding:0 10px 14px}
+.side small{color:var(--muted);font-size:12px;font-weight:600;padding:14px 10px 4px}
+.nav{display:flex;align-items:center;gap:10px;width:100%;min-height:42px;padding:0 12px;border:1px solid transparent;border-radius:14px;background:transparent;text-align:left;font-size:15px;transition:background .2s,border-color .2s}
+.nav:hover{background:var(--chip)}
+.nav[aria-current=page]{background:linear-gradient(150deg,var(--glass),var(--glass2));border-color:var(--edge);box-shadow:inset 0 1px 0 var(--hi),0 6px 18px -10px var(--shadow);font-weight:600}
+.nav .dot{width:10px;height:10px;border-radius:4px;flex:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.6)}
+.nav .ct{margin-left:auto;font-size:13px;color:var(--muted)}
+main{overflow-y:auto;display:flex;flex-direction:column}
+.top{position:sticky;top:12px;z-index:5;margin:14px max(2.4vw,14px) 0;display:flex;gap:12px;align-items:center;padding:10px 12px;border-radius:20px}
+.srch{position:relative;flex:1;max-width:520px}
+#res{position:absolute;top:52px;left:0;right:0;max-height:360px;overflow:auto;display:none;padding:6px;border-radius:16px}
+#res button{display:block;width:100%;text-align:left;border:0;background:none;padding:10px 12px;border-radius:12px}
+#res button:hover{background:var(--chip)}
+.user{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:14px;white-space:nowrap}
+.av{width:36px;height:36px;border-radius:50%;background:linear-gradient(160deg,#38b4f5,#0062a8);color:#fff;display:grid;place-items:center;font-weight:700;box-shadow:inset 0 1px 0 rgba(255,255,255,.6)}
+#view{padding:clamp(20px,3vw,36px) max(2.4vw,14px) 48px;max-width:1340px;width:100%}
+.head{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;margin-bottom:22px}
+.head p{max-width:64ch;margin-top:8px}
+.acts{display:flex;flex-wrap:wrap;gap:8px}
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5em,1fr));gap:12px;margin-bottom:22px}
+.fg{padding:16px 18px}
+.fg b{display:block;font:700 clamp(26px,3vw,34px) "Inter Tight",sans-serif;font-variant-numeric:tabular-nums}
+.fg span{font-size:14px;color:var(--muted)}
+.two{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:18px;margin-bottom:28px}
+.card{padding:20px}
+.mx{min-height:420px}
+.mx svg text{font:13px Inter,sans-serif;fill:var(--muted)}
+.mx svg .q{font:600 14px Inter,sans-serif;fill:var(--ink);opacity:.6}
+.mx circle{cursor:pointer;stroke:rgba(255,255,255,.85);stroke-width:2;transition:r .2s}
+.mx circle:hover,.mx circle:focus{r:12}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted);margin-top:10px}
+.legend span{display:flex;align-items:center;gap:6px}.legend i{width:10px;height:10px;border-radius:4px}
+.rank{list-style:none;margin:0;padding:0}
+.rank li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.rank a{color:var(--ink);font-weight:600;text-decoration:none}.rank a:hover{color:var(--blue)}
+.rank em{font-style:normal;font-size:13px;color:var(--muted);grid-column:1}
+.rank b{grid-row:1/3;grid-column:2;align-self:center;font-variant-numeric:tabular-nums;color:var(--blue)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+.fcard{display:flex;flex-direction:column;gap:9px;text-align:left;padding:20px;font-size:16px}
+.fcard .hd{display:flex;align-items:center;gap:10px}
+.fcard .hd i{width:12px;height:12px;border-radius:4px;background:var(--c);box-shadow:0 0 14px var(--c);flex:none}
+.fcard p{font-size:14px;color:var(--muted);margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:13px;padding:3px 10px;border-radius:999px;background:var(--chip);white-space:nowrap}
+.meter{display:grid;grid-template-columns:4.5em minmax(0,1fr) 2.2em;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.meter i{height:6px;border-radius:3px;background:var(--line);position:relative;overflow:hidden}
+.meter i::after{content:"";position:absolute;inset:0;width:var(--w);border-radius:3px;background:linear-gradient(90deg,color-mix(in srgb,var(--c) 60%,#fff),var(--c))}
+.meter b{text-align:right;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+.ucfoot{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:6px}
+/* workspace */
+.ws{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:18px;align-items:start}
+.chat{display:flex;flex-direction:column;height:min(860px,82vh);min-height:480px;overflow:hidden;border-radius:24px}
+.msgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px}
+.m{max-width:100%;padding:12px 15px;border-radius:18px;font-size:15px}
+.m.u{align-self:flex-end;max-width:82%;color:#fff;background:linear-gradient(160deg,#2ea6ee,#0062a8);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 8px 20px -10px rgba(0,114,188,.9);border-bottom-right-radius:6px}
+.m.a{background:var(--field);border:1px solid var(--edge);box-shadow:inset 0 1px 0 var(--hi);border-bottom-left-radius:6px}
+.m.a>*:last-child{margin-bottom:0}
+.m.a h4{margin:12px 0 6px;font-size:15px}
+.m.a ul,.m.a ol{margin:0 0 10px;padding-left:20px}
+.m.a table{font-size:13px;margin-bottom:10px}
+.who{font-size:13px;font-weight:600;color:var(--blue);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.who::before{content:"";width:14px;height:14px;border-radius:50%;background:conic-gradient(#00b4e6,#0072bc,#9fe3fb,#00b4e6);box-shadow:0 0 10px #00b4e6}
+.thinking{display:flex;gap:5px;padding:4px 0}.thinking i{width:7px;height:7px;border-radius:50%;background:var(--cyan);animation:b 1s infinite}
+.thinking i:nth-child(2){animation-delay:.15s}.thinking i:nth-child(3){animation-delay:.3s}
+@keyframes b{50%{opacity:.25;transform:translateY(-3px)}}
+.sug{display:flex;flex-wrap:wrap;gap:8px;padding:12px 14px 0;border-top:1px solid var(--line)}
+.sug button{text-align:left;font-size:14px;padding:8px 14px;min-height:40px;border:1px solid var(--edge);border-radius:14px;background:var(--field);transition:border-color .2s,transform .2s}
+.sug button:hover{border-color:var(--cyan);transform:translateY(-1px)}
+.ask{display:flex;gap:8px;padding:12px 14px 14px}
+.side-p{display:grid;gap:14px}
+.steps{list-style:none;margin:0;padding:0}
+.steps li{display:grid;grid-template-columns:24px minmax(0,1fr);gap:10px;padding:7px 0;font-size:14px;color:var(--muted)}
+.steps li::before{content:"";width:18px;height:18px;margin-top:2px;border-radius:50%;border:2px solid var(--line)}
+.steps li.run{color:var(--ink)}.steps li.run::before{border-color:var(--cyan);border-right-color:transparent;animation:sp .8s linear infinite}
+.steps li.ok{color:var(--ink)}.steps li.ok::before{border-color:var(--ok);background:var(--ok);box-shadow:inset 0 0 0 3px var(--base)}
+@keyframes sp{to{transform:rotate(360deg)}}
+.kpi{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;font-size:14px}
+.kpi b{text-align:right;white-space:nowrap}
+.guard{font-size:14px;border-left:3px solid var(--ok);padding:4px 0 4px 12px}
+.approve{margin-top:10px;padding:12px;border:1px dashed var(--cyan);border-radius:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:14px}
+.approve span{flex:1 1 220px}
+.tag{font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.t-ok{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
+.t-w{background:color-mix(in srgb,var(--warn) 16%,transparent);color:var(--warn)}
+.t-b{background:var(--chip);color:var(--blue)}
+.bar{display:grid;grid-template-columns:minmax(0,12em) minmax(0,1fr) 3em;gap:10px;align-items:center;font-size:14px;margin:4px 0}
+.bar i{height:12px;border-radius:6px;background:linear-gradient(90deg,var(--cyan),var(--blue) var(--w),var(--line) var(--w))}
+.bar b{text-align:right;font-variant-numeric:tabular-nums}
+.crumb{font-size:14px;margin-bottom:10px}.crumb a{text-decoration:none}
+.empty{padding:28px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:16px}
+/* trace */
+.trace{font:13px/1.5 "JetBrains Mono",ui-monospace,monospace;max-height:420px;overflow-y:auto;padding:4px 2px}
+.trace.mini{max-height:230px;font-size:12px}
+.ln{display:grid;grid-template-columns:4.4em 9.6em minmax(0,1fr);gap:8px;padding:3px 0;border-bottom:1px dashed var(--line);animation:in .3s ease-out}
+.ln .ts{color:var(--muted);text-align:right}
+.ln .ev{color:var(--cyan);font-weight:500}
+.ln .ev.tl{color:var(--blue)}.ln .ev.gd{color:var(--ok)}.ln .ev.wn{color:var(--warn)}
+.ln span:last-child{overflow-wrap:anywhere}
+@keyframes in{from{opacity:0;transform:translateY(4px)}}
+.trace.mini .ln{grid-template-columns:10.4em minmax(0,1fr)}.trace.mini .ts{display:none}
+/* behind the scenes */
+.ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px;margin-bottom:18px;border-radius:22px}
+.ctrl select{flex:1 1 260px;max-width:460px}
+.route{position:relative;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:12px;padding:26px 16px 16px;margin-bottom:18px;border-radius:26px}
+.track{position:absolute;left:calc(16px + (100% - 32px)/14);right:calc(16px + (100% - 32px)/14);top:12px;height:4px;border-radius:2px;background:var(--line)}
+.track b{position:absolute;left:0;top:0;bottom:0;width:var(--p,0%);border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--blue));transition:width .6s ease;box-shadow:0 0 12px var(--cyan)}
+.track i{position:absolute;top:-6px;left:var(--p,0%);width:16px;height:16px;margin-left:-8px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#00b4e6 55%,#0062a8);box-shadow:0 0 18px #00b4e6;transition:left .6s ease}
+.stage{text-align:left;padding:14px 12px;border-radius:18px;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.stage .sn{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;background:var(--chip);color:var(--blue)}
+.stage p{font-size:13px;color:var(--muted);margin:0}
+.stage.on{border-color:var(--cyan);box-shadow:inset 0 1px 0 var(--hi),0 0 0 2px color-mix(in srgb,var(--cyan) 55%,transparent),0 0 34px -4px var(--cyan)}
+.stage.on .sn{background:linear-gradient(160deg,#38b4f5,#0062a8);color:#fff;box-shadow:0 0 14px #00b4e6}
+.stage.done .sn{background:color-mix(in srgb,var(--ok) 22%,transparent);color:var(--ok)}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tabs button{min-height:38px;padding:0 14px;border-radius:999px;border:1px solid transparent;background:transparent;font-weight:500;color:var(--muted)}
+.tabs button[aria-selected=true]{border-color:var(--edge);background:var(--field);color:var(--ink);box-shadow:inset 0 1px 0 var(--hi)}
+.ctx{font:13px/1.6 "JetBrains Mono",ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere;margin:0;max-height:420px;overflow-y:auto}
+.ctx b{color:var(--cyan);font-weight:500}
+.det h3{font-size:19px;margin-bottom:8px}
+.ch{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.flow{position:relative}
+.fs{position:relative;display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:2px 12px;padding:8px 10px 14px 6px;border-radius:14px;opacity:.5;transition:opacity .35s,background .35s,box-shadow .35s}
+.fs.on,.fs.done{opacity:1}
+.fs.on{background:linear-gradient(90deg,color-mix(in srgb,var(--cyan) 18%,transparent),transparent 85%);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--cyan) 40%,transparent),0 0 24px -8px var(--cyan)}
+.nd{position:relative;z-index:1;grid-row:1/3;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:600 12px Inter,sans-serif;background:var(--field);border:1px solid var(--edge);color:var(--muted);transition:background .3s,box-shadow .3s}
+.fs.on .nd{color:#fff;border-color:transparent;background:radial-gradient(circle at 35% 30%,#d8f6ff,#00b4e6 45%,#0062a8);animation:pulse 1.3s ease-in-out infinite}
+.fs.on .nd::before{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid transparent;border-top-color:var(--cyan);border-right-color:var(--cyan);animation:sp .9s linear infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 4px color-mix(in srgb,var(--cyan) 25%,transparent),0 0 18px #00b4e6}50%{box-shadow:0 0 0 9px color-mix(in srgb,var(--cyan) 6%,transparent),0 0 32px #00b4e6}}
+.fs.done .nd{color:transparent;border-color:transparent;background:linear-gradient(160deg,color-mix(in srgb,var(--ok) 70%,#fff),var(--ok));box-shadow:0 0 14px -2px var(--ok)}
+.fs.done .nd::after{content:"";position:absolute;width:10px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:translateY(-1px) rotate(-45deg)}
+.fs h4{margin:5px 0 0;font-size:14px;font-weight:600;line-height:1.35}
+.fs .tm{grid-row:1;grid-column:3;align-self:center;font:12px "JetBrains Mono",monospace;color:var(--ok);white-space:nowrap}
+.fs .mt{grid-column:2/4;font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tool{font:500 11.5px "JetBrains Mono",monospace;padding:1px 7px;border-radius:6px;background:var(--chip);color:var(--blue)}
+.tool.model{color:var(--cyan);background:color-mix(in srgb,var(--cyan) 14%,transparent)}
+.tool.gd{color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,transparent)}
+.rl{position:absolute;left:20px;top:40px;bottom:-6px;width:2px;border-radius:1px;background:var(--line);overflow:hidden}
+.rl::after{content:"";position:absolute;left:0;right:0;top:0;height:calc(var(--f,0)*100%);background:linear-gradient(var(--cyan),var(--blue));box-shadow:0 0 8px var(--cyan)}
+.orb{position:absolute;z-index:2;left:16px;top:0;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle,#fff 0,#7ad7f5 40%,#00b4e6 70%);box-shadow:0 0 10px 3px #00b4e6,0 0 24px 6px color-mix(in srgb,#00b4e6 50%,transparent);opacity:0;pointer-events:none;transition:opacity .3s}
+.lvtag{font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--chip);color:var(--muted);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.lvtag::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.lvtag.run{color:var(--cyan);background:color-mix(in srgb,var(--cyan) 15%,transparent)}.lvtag.run::before{box-shadow:0 0 8px var(--cyan);animation:b 1s infinite}
+.lvtag.ok{color:var(--ok);background:color-mix(in srgb,var(--ok) 15%,transparent)}
+.lv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.lv div{padding:10px 12px;border-radius:14px;background:var(--field);border:1px solid var(--edge);box-shadow:inset 0 1px 0 var(--hi);transition:box-shadow .3s}
+.lv b{display:block;font:700 21px "Inter Tight",sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lv span{font-size:12px;color:var(--muted)}
+.lv.live div{box-shadow:inset 0 1px 0 var(--hi),0 0 0 1px color-mix(in srgb,var(--cyan) 35%,transparent),0 0 20px -8px var(--cyan)}
+.lv.live b{color:var(--cyan);text-shadow:0 0 14px color-mix(in srgb,var(--cyan) 60%,transparent)}
+.wax,.wr{display:grid;grid-template-columns:9.6em minmax(0,1fr) 4.2em;gap:8px;align-items:center}
+.wax{font:11px "JetBrains Mono",monospace;color:var(--muted);margin-bottom:4px}.wax div{display:flex;justify-content:space-between}
+.wf{position:relative}
+.wr{font-size:12.5px;padding:3px 0;transition:opacity .3s}
+.wl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
+.wr.sub .wl{padding-left:12px;position:relative}.wr.sub .wl::before{content:"";position:absolute;left:2px;top:50%;width:6px;height:1px;background:var(--muted)}
+.wr.on .wl,.wr.done .wl{color:var(--ink)}
+.wt{position:relative;height:14px;border-radius:7px;background:color-mix(in srgb,var(--line) 70%,transparent)}
+.wb{position:absolute;top:2px;bottom:2px;left:var(--a);width:0;min-width:0;border-radius:5px;background:linear-gradient(90deg,var(--c1),var(--c2));overflow:hidden}
+.wr.on .wb{box-shadow:0 0 12px var(--c2),0 0 2px var(--c1)}
+.wr.on .wb::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent) no-repeat;background-size:50% 100%;animation:sh .9s linear infinite}
+@keyframes sh{from{background-position:-60% 0}to{background-position:160% 0}}
+.k-req{--c1:#9aa6ff;--c2:#4b5fe0}.k-model{--c1:#9fe6fb;--c2:#00b4e6}.k-tool{--c1:#4fb3f2;--c2:#0062a8}.k-guard{--c1:#7eeabf;--c2:#10a36e}
+.wd{font:11.5px "JetBrains Mono",monospace;color:var(--muted);text-align:right;white-space:nowrap}
+.now{position:absolute;z-index:3;top:-4px;bottom:-4px;width:2px;margin-left:-1px;border-radius:1px;background:var(--cyan);box-shadow:0 0 10px 1px var(--cyan);opacity:0;pointer-events:none}
+.feed{margin-top:12px;min-height:40px;font:12px/1.5 "JetBrains Mono",monospace}
+.feed .ln{grid-template-columns:10.4em minmax(0,1fr)}.feed .ts{display:none}
+.all{margin:10px 0 8px;font-size:13px}.all summary{cursor:pointer;color:var(--muted)}.all .trace{margin-top:8px}
+.about{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}
+@media(max-width:1000px){.about{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.wax,.wr{grid-template-columns:7.8em minmax(0,1fr) 3.6em}.feed .ln{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:1180px){.route{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));padding-top:16px}.track{display:none}}
+@media(max-width:1000px){.ws,.two{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:820px){
+ body{overflow:auto}.login{height:auto;min-height:100%;grid-template-columns:minmax(0,1fr)}.lg-fig{min-height:340px;order:-1}
+ #app{height:auto;min-height:100%;grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr}
+ main{overflow:visible}
+ .side{margin:10px 10px 0;flex-direction:row;padding:8px;overflow-x:auto;gap:4px;align-items:center;position:sticky;top:0;z-index:6;border-radius:18px}
+ .side .logo{width:96px;flex:none;margin:0 8px}.side small,.side .sub{display:none}
+ .nav{flex:none;width:auto;white-space:nowrap}.nav .ct{display:none}
+ .top{top:auto;position:relative;margin:10px 10px 0}.user span{display:none}
+}
+@media(max-width:600px){table{font-size:13px}th,td{padding:6px 5px}.bar{grid-template-columns:minmax(0,8em) minmax(0,1fr) 2.6em}.m.u{max-width:92%}.ln{grid-template-columns:minmax(0,1fr)}.ln .ts{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* layout v3: top nav, docked chat, horizontal plan */
+@property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+#app{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+.top{display:none}
+.topnav{position:relative;z-index:20;margin:12px 14px 0;padding:10px 14px;border-radius:22px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,580px) minmax(0,1fr);align-items:center;gap:16px}
+.tn-l{display:flex;align-items:center;gap:12px}
+.tn-logo{display:block;flex:none}.tn-logo .logo{width:128px}
+.tn-app{font-size:13px;color:var(--muted);padding-left:12px;border-left:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ham{width:42px;height:42px;flex:none;border-radius:13px;border:1px solid var(--edge);background:var(--field);display:grid;place-items:center;box-shadow:inset 0 1px 0 var(--hi)}
+.ham i,.ham i::before,.ham i::after{display:block;width:16px;height:2px;border-radius:1px;background:var(--ink)}
+.ham i{position:relative}.ham i::before,.ham i::after{content:"";position:absolute;left:0}.ham i::before{top:-5px}.ham i::after{top:5px}
+.topnav .srch{max-width:none;width:100%}
+.topnav .srch .field{border-radius:999px;padding-left:44px;background:var(--field) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='none' stroke='%2300b4e6' stroke-width='2'%3E%3Ccircle cx='8' cy='8' r='6'/%3E%3Cpath d='m13 13 4 4'/%3E%3C/svg%3E") no-repeat 16px 50%}
+.topnav .user{justify-self:end;margin:0}
+.prof{display:flex;align-items:center;gap:10px;padding:4px 14px 4px 4px;border-radius:999px;background:var(--field);border:1px solid var(--edge);box-shadow:inset 0 1px 0 var(--hi)}
+.prof .av{position:relative}.prof .av::after{content:"";position:absolute;right:-1px;bottom:-1px;width:10px;height:10px;border-radius:50%;background:var(--ok);border:2px solid var(--base)}
+.pn{display:grid;line-height:1.25}.pn b{font-size:14px}.pn span{font-size:12px;color:var(--muted)}
+.shell{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:0;transition:grid-template-columns .3s ease}
+body.rail .shell{grid-template-columns:92px minmax(0,1fr)}
+.shell main{overflow-y:auto;min-height:0}
+.side .logo,.side .sub{display:none}
+.nav .sh{display:none}
+body.rail .side{padding:12px 8px}
+body.rail .nav{flex-direction:column;justify-content:center;gap:5px;min-height:56px;padding:6px 2px;font-size:11px;text-align:center}
+body.rail .nav .lb,body.rail .nav .ct,body.rail .side small{display:none}
+body.rail .nav .sh{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.1}
+/* workspace */
+.ws2{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,440px);grid-template-areas:"head chat" "plan chat" "trace chat" "about chat";gap:18px;align-items:start}
+.hd2{grid-area:head}.hd2 .head{margin-bottom:0}
+.ws2>.chat{grid-area:chat;position:sticky;top:0;height:calc(100svh - 132px);min-height:520px;border-radius:24px}
+.plan{grid-area:plan;padding-bottom:12px}.trc{grid-area:trace}.abt{grid-area:about;margin-top:0}
+.chd{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.chd b{display:block;font-size:15px}.chd span{font-size:12.5px;color:var(--muted)}
+.cav{width:38px;height:38px;flex:none;border-radius:50%;background:conic-gradient(from 200deg,#00b4e6,#0072bc,#9fe3fb,#00b4e6);box-shadow:inset 0 0 0 8px var(--base),0 0 16px -2px #00b4e6}
+.onl{margin-left:auto;font-size:12px!important;font-weight:600;color:var(--ok)!important;display:flex;align-items:center;gap:6px}.onl::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.ch .tt{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.nvb{display:flex;gap:6px}
+.pbtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--edge);background:var(--field);font-size:22px;line-height:1;display:grid;place-items:center;padding-bottom:3px;box-shadow:inset 0 1px 0 var(--hi);transition:border-color .2s}
+.pbtn:hover{border-color:var(--cyan)}
+.ptrack{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent);mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent);overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:thin;margin:0 -8px;padding:10px 8px 8px}
+.prow{display:flex;gap:30px;width:max-content}
+.pt{--tb:light-dark(rgba(255,255,255,.82),rgba(14,22,68,.7));position:relative;flex:none;width:206px;min-height:158px;padding:14px 14px 12px;scroll-snap-align:center;border-radius:18px;border:1.5px solid transparent;background:linear-gradient(var(--tb),var(--tb)) padding-box,linear-gradient(155deg,var(--edge),color-mix(in srgb,var(--edge) 10%,transparent) 55%,var(--edge)) border-box;display:flex;flex-direction:column;gap:8px;box-shadow:0 10px 26px -16px var(--shadow);opacity:.66;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,opacity .35s}
+.pt:hover{transform:translateY(-3px);opacity:1}
+.pt.on,.pt.done{opacity:1}
+.pt.on{background:linear-gradient(var(--tb),var(--tb)) padding-box,conic-gradient(from var(--ang),#00b4e6,#0072bc,#a5ebff,#3d6bff,#00b4e6) border-box;box-shadow:0 0 0 4px color-mix(in srgb,var(--cyan) 14%,transparent),0 0 38px -6px var(--cyan),0 16px 30px -16px var(--shadow);transform:translateY(-4px);animation:ang 2.2s linear infinite}
+@keyframes ang{to{--ang:360deg}}
+.pt.done{background:linear-gradient(var(--tb),var(--tb)) padding-box,linear-gradient(155deg,color-mix(in srgb,var(--ok) 75%,transparent),color-mix(in srgb,var(--ok) 8%,transparent) 55%,color-mix(in srgb,var(--ok) 45%,transparent)) border-box}
+.pt:not(:last-child)::after{content:"";position:absolute;left:calc(100% + 1.5px);top:50%;width:29px;height:2px;background:linear-gradient(90deg,var(--line) 0,var(--line));transition:background .3s,box-shadow .3s}
+.pt:not(:last-child)::before{content:"";position:absolute;left:calc(100% + 20px);top:calc(50% - 4px);width:7px;height:7px;border-top:2px solid var(--line);border-right:2px solid var(--line);transform:rotate(45deg)}
+.pt.done:not(:last-child)::after{background:linear-gradient(90deg,var(--ok),var(--cyan));box-shadow:0 0 10px var(--cyan)}
+.pt.done:not(:last-child)::before{border-color:var(--cyan)}
+.pt.on:not(:last-child)::after{background:linear-gradient(90deg,var(--cyan) calc(var(--f,0)*100%),var(--line) calc(var(--f,0)*100%));box-shadow:0 0 8px color-mix(in srgb,var(--cyan) 60%,transparent)}
+.pt-top{display:flex;align-items:center;gap:9px}
+.pt .nd{width:30px;height:30px}
+.pt .stt{font-size:12px;font-weight:600;color:var(--muted)}.pt.on .stt{color:var(--cyan)}.pt.done .stt{color:var(--ok)}
+.pt .tm{margin-left:auto;font:12px "JetBrains Mono",monospace;color:var(--ok);white-space:nowrap}
+.pt h4{margin:0;font-size:14px;line-height:1.35;font-weight:600}
+.pt .mt{margin-top:auto;font-size:12px;line-height:1.35;color:var(--muted);display:flex;flex-direction:column;align-items:flex-start;gap:5px}
+.pb{height:4px;border-radius:2px;background:var(--line);overflow:hidden}
+.pb i{display:block;height:100%;width:calc(var(--f,0)*100%);border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--blue));box-shadow:0 0 10px var(--cyan)}
+.pt.done .pb i{background:linear-gradient(90deg,color-mix(in srgb,var(--ok) 60%,#fff),var(--ok));box-shadow:none}
+.lv{grid-template-columns:repeat(4,minmax(0,1fr))}
+.wfbox{padding:14px 14px 10px;border-radius:16px;background:var(--field);border:1px solid var(--edge);box-shadow:inset 0 1px 0 var(--hi)}
+.wax,.wr{grid-template-columns:11em minmax(0,1fr) 4.6em}
+.wl em{display:none;font-style:normal;font:11px "JetBrains Mono",monospace;color:var(--blue);margin-right:6px}
+.wt{height:16px}
+.wr{padding:4px 0}
+.wleg{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:12px;color:var(--muted)}
+.wleg span{display:flex;align-items:center;gap:6px}.wleg i{width:18px;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--c1),var(--c2))}
+.fh{margin:16px 0 6px;font-size:13px;color:var(--muted);font-weight:600}
+.feed{margin-top:0;padding:6px 12px;border-radius:14px;border:1px solid var(--line)}
+.feed .ln:last-child{border-bottom:0}
+.feed .ln{grid-template-columns:12em minmax(0,1fr)}
+@media(max-width:1180px){.ws2{grid-template-columns:minmax(0,1fr) minmax(320px,380px)}}
+@media(max-width:1000px){.ws2{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "plan" "chat" "trace" "about"}.ws2>.chat{position:relative;height:640px}.wax,.wr{grid-template-columns:10em minmax(0,1fr) 4.4em}}
+@media(max-width:820px){
+ #app{height:auto;min-height:100%;display:block}
+ .topnav{grid-template-columns:auto minmax(0,1fr) auto;margin:8px 8px 0;padding:8px;gap:8px}
+ .ham,.tn-app,.pn{display:none}.tn-logo .logo{width:92px}.prof{padding:3px;border:0;background:none}
+ .shell{display:block}.shell main{overflow:visible}
+ body.rail .nav{flex-direction:row;font-size:15px;min-height:42px;padding:0 12px;gap:10px}
+ body.rail .nav .lb{display:inline}body.rail .nav .sh{display:none}
+}
+@media(max-width:600px){.topnav{grid-template-columns:auto minmax(0,1fr)}.topnav .srch{grid-column:1/-1;grid-row:2}.lv{grid-template-columns:repeat(2,minmax(0,1fr))}.wax,.wr{grid-template-columns:7.8em minmax(0,1fr) 3.8em}.wl em{display:none}.feed .ln{grid-template-columns:minmax(0,1fr)}.topnav .user .ghost{padding:0 12px}.pt{width:186px}}
+.lg-fig svg text{font-family:Inter,sans-serif}
+.hx-ring{fill:none;stroke:rgba(160,220,255,.12);stroke-dasharray:2 7;stroke-linejoin:round}
+.hx-link{stroke:rgba(160,220,255,.28);stroke-width:1.5}
+.hx-box{fill:url(#hf);stroke:rgba(255,255,255,.28);stroke-width:1.2;stroke-linejoin:round}
+.hx-glow{fill:none;stroke:var(--c);stroke-width:12;stroke-linejoin:round;opacity:0;animation:hxg 6s ease-in-out infinite}
+.hx-trace{fill:none;stroke:var(--c);stroke-width:2.6;stroke-linejoin:round;stroke-dasharray:100 100;stroke-dashoffset:100;animation:hxt 6s ease-in-out infinite}
+.hx-pulse{stroke:#bdf0ff;stroke-width:3;stroke-linecap:round;stroke-dasharray:10 120;stroke-dashoffset:10;opacity:0;animation:hxp 6s ease-in infinite}
+.hx-core-glow{fill:none;stroke:#00b4e6;stroke-width:14;stroke-linejoin:round;opacity:.18;animation:hxc 1.2s ease-in-out infinite}
+.hx-t{fill:#f2f6ff;font-weight:600;text-anchor:middle}
+.hx-s{fill:#aab4d8;font-size:12px;text-anchor:middle}
+@keyframes hxt{0%{stroke-dashoffset:100;opacity:1}13%{stroke-dashoffset:0;opacity:1}20%{stroke-dashoffset:0;opacity:1}30%,100%{stroke-dashoffset:0;opacity:0}}
+@keyframes hxg{0%{opacity:0}9%{opacity:.4}20%{opacity:.22}30%,100%{opacity:0}}
+@keyframes hxp{0%,12%{stroke-dashoffset:10;opacity:0}13%{opacity:1}20%{stroke-dashoffset:-100;opacity:1}21%,100%{stroke-dashoffset:-100;opacity:0}}
+@keyframes hxc{0%,100%{opacity:.12}50%{opacity:.32}}
+@media(prefers-reduced-motion:reduce){.hx-trace{stroke-dashoffset:0;opacity:.9}.hx-glow{opacity:.2}}
+/* fit to screen */
+.lg-card{align-self:auto;margin:auto 0}
+@media(max-height:780px) and (min-width:821px){.lg-card{gap:12px;padding:24px 28px}.lg-card h1{font-size:28px}.lg-card .logo{width:150px}}
+.ws2>.chat{top:12px;height:calc(100dvh - var(--navh,72px) - 74px);min-height:420px}
+.chat .msgs{min-height:0}
+.chat .sug{flex:none;max-height:32%;overflow-y:auto}
+.chat .ask{flex:none}
+.chat .m.a table{font-size:12.5px}
+.chat .m.a th{white-space:normal;padding:6px}
+.chat .m.a td{padding:6px}
+.chat .approve{gap:8px}.chat .approve span{flex:1 1 100%}.chat .approve .btn,.chat .approve .ghost{flex:1;min-height:40px}
+@media(max-width:1280px){.tn-app{display:none}}
+@media(max-width:1100px){.pn{display:none}.prof{padding:3px}}
+@media(max-width:1000px){.ws2>.chat{height:min(640px,calc(100dvh - 120px))}}
+/* icons */
+.ico{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.pt-top{gap:10px}
+.pic{position:relative;flex:none;width:42px;height:42px;border-radius:13px;display:grid;place-items:center;color:var(--blue);background:linear-gradient(150deg,rgba(255,255,255,.2),rgba(255,255,255,.04));border:1px solid var(--edge);box-shadow:inset 0 1px 0 var(--hi);transition:background .3s,color .3s,box-shadow .3s}
+.pt.on .pic{color:#fff;border-color:transparent;background:linear-gradient(150deg,#6fd6ff,#0a72e6);box-shadow:0 0 0 4px color-mix(in srgb,var(--cyan) 22%,transparent),0 0 22px #00b4e6;animation:picp 1.3s ease-in-out infinite}
+@keyframes picp{50%{box-shadow:0 0 0 7px color-mix(in srgb,var(--cyan) 8%,transparent),0 0 30px #00b4e6}}
+.pt.done .pic{color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,transparent);border-color:color-mix(in srgb,var(--ok) 45%,transparent)}
+.pt.done .pic::after{content:"";position:absolute;right:-5px;bottom:-5px;width:17px;height:17px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 2px var(--base)}
+.pt.done .pic::before{content:"";position:absolute;z-index:1;right:0;bottom:2px;width:7px;height:4px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg)}
+.ps{display:grid;line-height:1.25}
+.sn2{font-size:11.5px;color:var(--muted)}
+.stage .sn .ico{width:16px;height:16px}
+.stage.done .sn .ico{stroke:var(--ok)}
+/* post-login blue theme */
+body.blue{color-scheme:dark;--base:#07308f;--ink:#f3f7ff;--muted:#bcd0f7;--glass:rgba(255,255,255,.13);--glass2:rgba(255,255,255,.045);--edge:rgba(255,255,255,.26);--line:rgba(255,255,255,.15);--hi:rgba(255,255,255,.38);--shadow:rgba(0,12,60,.55);--blue:#9ad8ff;--logo:#ffffff;--b1:#1d6cff;--b2:#00a8ea;--b3:#0b3bc4;--b4:#4fd1ff;--ok:#5ee6ad;--warn:#ff9c88;--chip:rgba(255,255,255,.13);--field:rgba(255,255,255,.09)}
+body.blue .liquid{background:linear-gradient(160deg,#0a46c4 0,#07308f 45%,#051f66 100%)}
+body.blue .liquid i{opacity:.75}
+body.blue .pt{--tb:rgba(9,45,140,.62)}
+body.blue .btn{background:linear-gradient(180deg,#6dd6ff 0,#1b8ff2 48%,#0a5fd4 100%)}
+body.blue .m.u{background:linear-gradient(160deg,#36c2ff,#0b6fe8)}
+body.blue .mx circle{stroke:#fff}
+body.blue .k-tool{--c1:#7fd0ff;--c2:#2f8dff}
+body.blue .field::placeholder{color:#c4d6fb;opacity:.85}
+body.blue .field{color:#fff}
+.field::placeholder{color:var(--muted)}
+/* post-login: premium gradient blue */
+body.blue{color-scheme:dark;--base:#041a5c;--ink:#f4f8ff;--muted:#b9c9ee;--glass:rgba(255,255,255,.13);--glass2:rgba(255,255,255,.035);--edge:rgba(255,255,255,.22);--line:rgba(255,255,255,.13);--hi:rgba(255,255,255,.42);--shadow:rgba(0,6,40,.6);--blue:#7dd3fc;--cyan:#22d3ee;--b1:#1d4ed8;--b2:#06b6d4;--b3:#2563eb;--b4:#38bdf8;--ok:#5eeaa8;--warn:#ff9c88;--chip:rgba(34,211,238,.13);--field:rgba(255,255,255,.08);--logo:#fff}
+body.blue .liquid{background:linear-gradient(150deg,#020c34 0%,#05207f 42%,#0a3db5 72%,#0567a8 100%)}
+body.blue .liquid i{opacity:.5;mix-blend-mode:screen}
+body.blue .glass{background:linear-gradient(150deg,rgba(255,255,255,.14),rgba(255,255,255,.035));-webkit-backdrop-filter:blur(22px) saturate(160%);backdrop-filter:blur(22px) saturate(160%);border:1px solid rgba(255,255,255,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 18px 40px -20px rgba(0,6,40,.75)}
+body.blue .hov:hover{border-color:rgba(34,211,238,.6);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 0 0 1px rgba(34,211,238,.25),0 24px 50px -18px rgba(0,10,60,.8),0 0 40px -14px rgba(34,211,238,.6)}
+body.blue .hov::after{background:radial-gradient(280px circle at var(--mx,50%) var(--my,0%),rgba(125,211,252,.22),transparent 62%)}
+body.blue h1,body.blue h2,body.blue h3{color:#fff}
+body.blue h1{text-shadow:0 2px 24px rgba(34,211,238,.25)}
+body.blue a{color:#7dd3fc}
+body.blue .field{color:#fff;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.22);box-shadow:inset 0 1px 2px rgba(0,0,0,.2)}
+body.blue .field::placeholder{color:#a9bbe3;opacity:1}
+body.blue .field:focus{border-color:#22d3ee;box-shadow:0 0 0 3px rgba(34,211,238,.25)}
+body.blue select.field option{color:#0a1a40}
+body.blue .btn{background:linear-gradient(135deg,#22d3ee 0,#2b8cff 55%,#1d4ed8 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 10px 24px -10px rgba(34,211,238,.9)}
+body.blue .btn:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 12px 30px -8px rgba(34,211,238,1)}
+body.blue .ghost{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.28);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+body.blue .ghost:hover{border-color:#22d3ee;color:#a5f3fc}
+body.blue .ghost[aria-pressed=true]{border-color:#22d3ee;color:#a5f3fc;background:rgba(34,211,238,.12)}
+/* top bar */
+body.blue .topnav{background:linear-gradient(100deg,rgba(2,14,60,.72),rgba(8,50,160,.5) 60%,rgba(5,100,170,.45));border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 18px 40px -18px rgba(0,6,40,.8);overflow:visible}
+body.blue .topnav::after{content:"";position:absolute;left:24px;right:24px;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,#22d3ee,#7dd3fc,#22d3ee,transparent);background-size:200% 100%;animation:line 6s linear infinite;opacity:.8}
+@keyframes line{to{background-position:-200% 0}}
+body.blue .topnav .ham{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25)}
+body.blue .topnav .ham i,body.blue .topnav .ham i::before,body.blue .topnav .ham i::after{background:#fff}
+body.blue .topnav .srch .field{background-color:rgba(255,255,255,.1)}
+body.blue .topnav .prof{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);box-shadow:none}
+body.blue .topnav .av{background:linear-gradient(135deg,#22d3ee,#2563eb);color:#fff}
+body.blue .topnav .prof .av::after{border-color:#06257e}
+body.blue #res{background:rgba(6,28,100,.92);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+body.blue #res button:hover{background:rgba(34,211,238,.14)}
+/* sidebar */
+body.blue .side .nav{color:#dfe8ff}
+body.blue .side .nav:hover{background:rgba(255,255,255,.08)}
+body.blue .side .nav[aria-current=page]{color:#fff;background:linear-gradient(90deg,rgba(34,211,238,.3),rgba(37,99,235,.18));border-color:rgba(34,211,238,.5);box-shadow:0 0 22px -8px rgba(34,211,238,.9),inset 0 1px 0 rgba(255,255,255,.25)}
+body.blue .nav .dot{box-shadow:0 0 10px -1px currentColor}
+/* figures */
+body.blue .figs .fg{position:relative;overflow:hidden}
+body.blue .figs .fg b{background:linear-gradient(180deg,#ffffff 30%,#7dd3fc);-webkit-background-clip:text;background-clip:text;color:transparent}
+body.blue .figs .fg::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,#22d3ee,transparent)}
+body.blue .figs .fg::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;pointer-events:none;background:linear-gradient(100deg,transparent,rgba(255,255,255,.14),transparent);animation:sweep 7s ease-in-out infinite;opacity:1;border-radius:0}
+body.blue .figs .fg:nth-child(2)::after{animation-delay:1s}body.blue .figs .fg:nth-child(3)::after{animation-delay:2s}body.blue .figs .fg:nth-child(4)::after{animation-delay:3s}body.blue .figs .fg:nth-child(5)::after{animation-delay:4s}
+@keyframes sweep{0%,70%{left:-60%}100%{left:130%}}
+/* chat */
+body.blue .chd{color:#fff;background:linear-gradient(100deg,rgba(2,14,60,.55),rgba(14,80,200,.45));border-bottom:1px solid rgba(255,255,255,.14)}
+body.blue .chd b{color:#fff}
+body.blue .cav{box-shadow:inset 0 0 0 8px #06257e,0 0 18px -2px #22d3ee}
+body.blue .onl{color:#5eeaa8!important}
+body.blue .msgs{background:rgba(2,12,50,.25)}
+body.blue .m.a{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+body.blue .m.u{background:linear-gradient(135deg,#22d3ee,#2563eb);box-shadow:0 10px 24px -12px rgba(34,211,238,.9)}
+body.blue .sug button{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.2)}
+body.blue .sug button:hover{border-color:#22d3ee;color:#a5f3fc}
+body.blue .who{color:#7dd3fc}
+/* plan + trace */
+body.blue .pt{--tb:rgba(9,36,120,.72);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 16px 30px -18px rgba(0,6,40,.8)}
+body.blue .pt.on{box-shadow:0 0 0 4px rgba(34,211,238,.16),0 0 40px -6px rgba(34,211,238,.85)}
+body.blue .pic{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.22);color:#7dd3fc}
+body.blue .pt.on .pic{background:linear-gradient(135deg,#22d3ee,#2563eb);color:#fff}
+body.blue .pt.done .pic::after{box-shadow:0 0 0 2px #0a2a8a}
+body.blue .tool{background:rgba(125,211,252,.14);color:#a5e4ff}
+body.blue .tool.model{background:rgba(34,211,238,.16);color:#67e8f9}
+body.blue .lv div{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.18)}
+body.blue .lv.live div{border-color:rgba(34,211,238,.6);box-shadow:0 0 22px -8px #22d3ee}
+body.blue .lv.live b{color:#67e8f9;text-shadow:0 0 16px rgba(34,211,238,.7)}
+body.blue .wfbox{background:rgba(2,12,50,.3);border-color:rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}
+body.blue .wt{background:rgba(255,255,255,.08)}
+body.blue .ln .ev{color:#67e8f9}body.blue .ln .ev.tl{color:#93c5fd}
+body.blue .feed{background:rgba(2,12,50,.2);border-color:rgba(255,255,255,.12)}
+body.blue .lvtag.run{color:#67e8f9;background:rgba(34,211,238,.14)}
+body.blue .stage.on{box-shadow:0 0 0 2px rgba(34,211,238,.6),0 0 36px -6px #22d3ee}
+body.blue .tabs button[aria-selected=true]{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25)}
+body.blue .mx svg .q{fill:#fff}
+body.blue .mx svg rect{fill:#22d3ee}
+body.blue .t-b{background:rgba(125,211,252,.16);color:#a5e4ff}
+/* entrance animation */
+@keyframes rise{from{opacity:0;transform:translateY(16px)}}
+#view.anim>*,#view.anim .ws2>*,#view.anim .figs>*,#view.anim .grid>*,#view.anim .two>*,#view.anim .about>*{animation:rise .65s cubic-bezier(.2,.8,.2,1) backwards}
+#view.anim>*:nth-child(2),#view.anim .ws2>*:nth-child(2),#view.anim .figs>*:nth-child(2),#view.anim .grid>*:nth-child(2),#view.anim .two>*:nth-child(2),#view.anim .about>*:nth-child(2){animation-delay:.07s}
+#view.anim>*:nth-child(3),#view.anim .ws2>*:nth-child(3),#view.anim .figs>*:nth-child(3),#view.anim .grid>*:nth-child(3),#view.anim .about>*:nth-child(3){animation-delay:.14s}
+#view.anim>*:nth-child(4),#view.anim .ws2>*:nth-child(4),#view.anim .figs>*:nth-child(4),#view.anim .grid>*:nth-child(4){animation-delay:.21s}
+#view.anim>*:nth-child(n+5),#view.anim .ws2>*:nth-child(n+5),#view.anim .figs>*:nth-child(n+5),#view.anim .grid>*:nth-child(n+5){animation-delay:.28s}
+/* text fit */
+.chip{white-space:normal;overflow-wrap:anywhere;max-width:100%;line-height:1.35;padding:4px 10px}
+.about{grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
+.kpis{display:grid;gap:0}
+.kr{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.kr:first-child{padding-top:0}
+.kr span{flex:1 1 9em;color:var(--muted)}
+.kr b{flex:0 1 auto;margin-left:auto;text-align:right;overflow-wrap:anywhere}
+.guard{overflow-wrap:anywhere}
+.fcard h3,.pt h4,.rank a,.stage h3{overflow-wrap:anywhere}
+@media(max-width:1100px) and (min-width:821px){.topnav{grid-template-columns:auto minmax(0,1fr) auto}}
+
+/* light fields on the blue theme */
+body.blue .field{background:#f4f8ff;color:#0a1a40;border-color:rgba(255,255,255,.75);box-shadow:0 6px 18px -10px rgba(0,10,60,.6)}
+body.blue .field::placeholder{color:#6b7a99}
+body.blue .field:focus{border-color:#22d3ee;box-shadow:0 0 0 3px rgba(34,211,238,.35)}
+body.blue .topnav .srch .field{background-color:#f4f8ff}
+body.blue .sug button{background:rgba(255,255,255,.93);color:#0a2a6e;border-color:rgba(255,255,255,.9);box-shadow:0 6px 16px -10px rgba(0,10,60,.6)}
+body.blue .sug button:hover{background:#fff;color:#0b5ed7;border-color:#22d3ee;box-shadow:0 0 0 3px rgba(34,211,238,.25)}
+body.blue .m.a{--ink:#0a1a40;--muted:#55678f;--line:#e2eaf7;--ok:#0f9d63;--warn:#d6452c;--chip:#eaf1ff;--blue:#0b5ed7;--cyan:#0891b2;color:#0a1a40;background:rgba(255,255,255,.95);border-color:#fff;box-shadow:0 10px 24px -14px rgba(0,10,60,.7)}
+body.blue .m.a .who{color:#0b5ed7}
+body.blue .m.a .ghost{background:#fff;color:#0a1a40;border-color:#cfdcf3}
+body.blue .m.a .ghost:hover{color:#0b5ed7;border-color:#0b5ed7}
+body.blue .m.a .thinking i{background:#0b5ed7}
+
+/* bigger chat */
+.ws2{grid-template-columns:minmax(0,1fr) minmax(400px,520px)}
+.ws2>.chat{top:6px;height:calc(100dvh - var(--navh,72px) - 58px);min-height:540px}
+@media(max-width:1180px){.ws2{grid-template-columns:minmax(0,1fr) minmax(360px,450px)}}
+@media(max-width:1000px){.ws2{grid-template-columns:minmax(0,1fr)}.ws2>.chat{height:min(720px,calc(100dvh - 110px))}}
+.chat .sug{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;max-height:none;padding:10px 14px 2px;scroll-snap-type:x proximity;scrollbar-width:none}
+.chat .sug::-webkit-scrollbar{display:none}
+.chat .sug button{flex:0 0 auto;max-width:300px;min-height:0;padding:8px 14px;font-size:13.5px;line-height:1.35;scroll-snap-align:start;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.chat .ask{padding:10px 14px 14px}
+.msgs{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.35) transparent}
+.msgs::-webkit-scrollbar{width:8px}.msgs::-webkit-scrollbar-track{background:transparent}.msgs::-webkit-scrollbar-thumb{background:rgba(255,255,255,.3);border-radius:4px}
+.msgs::-webkit-scrollbar-button{display:none}
+.chat .sug{scroll-padding-inline:14px}
+.chat .sug button{display:block;-webkit-line-clamp:unset;white-space:nowrap;max-height:none;text-overflow:ellipsis;max-width:320px}
+/* post-login: professional corporate theme */
+body.pro{color-scheme:light;--base:#f3f5f9;--ink:#16202e;--muted:#5d6879;--glass:#fff;--glass2:#fff;--edge:#e1e6ee;--line:#e6ebf2;--hi:#fff;--shadow:rgba(16,24,40,.1);--blue:#0063a8;--cyan:#0091d0;--ok:#11834f;--warn:#c4361f;--chip:#eef4fa;--field:#fff;--logo:#0072bc}
+body.pro .liquid{background:#f3f5f9}body.pro .liquid i{display:none}
+body.pro .glass{background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none;border:1px solid #e1e6ee;border-radius:12px;box-shadow:0 1px 2px rgba(16,24,40,.05)}
+body.pro .hov::after{display:none}
+body.pro .hov:hover{transform:translateY(-2px);border-color:#c8d4e3;box-shadow:0 10px 24px -12px rgba(16,24,40,.22)}
+body.pro h1,body.pro h2,body.pro h3{color:#0b1f3a}
+body.pro a{color:#0063a8}
+body.pro .btn{background:#0072bc;border-radius:8px;box-shadow:none;transform:none}
+body.pro .btn:hover{background:#005e9c;box-shadow:none;transform:none}
+body.pro .ghost{background:#fff;border:1px solid #cdd5e0;border-radius:8px;box-shadow:none;color:#16202e;-webkit-backdrop-filter:none;backdrop-filter:none}
+body.pro .ghost:hover{border-color:#0072bc;color:#0063a8}
+body.pro .ghost[aria-pressed=true]{background:#eef4fa;border-color:#0072bc;color:#0063a8}
+body.pro .field{background:#fff;border:1px solid #cdd5e0;border-radius:8px;box-shadow:none;color:#16202e}
+body.pro .field::placeholder{color:#7b8595}
+body.pro .field:focus{border-color:#0072bc;box-shadow:0 0 0 3px rgba(0,114,188,.16)}
+/* header */
+body.pro .topnav{margin:0;border-radius:0;border:0;border-bottom:1px solid #e1e6ee;background:#fff;padding:10px 20px;box-shadow:0 1px 3px rgba(16,24,40,.05)}
+body.pro .ham{background:#fff;border:1px solid #e1e6ee;border-radius:8px;box-shadow:none}
+body.pro .ham i,body.pro .ham i::before,body.pro .ham i::after{background:#16202e}
+body.pro .tn-app{color:#5d6879;border-left-color:#e1e6ee}
+body.pro .topnav .srch .field{background-color:#f3f5f9;border-color:#f3f5f9;border-radius:8px}
+body.pro .topnav .srch .field:focus{background-color:#fff;border-color:#0072bc}
+body.pro .prof{background:transparent;border:0;box-shadow:none}
+body.pro .av{background:#0072bc;box-shadow:none}
+body.pro .prof .av::after{border-color:#fff}
+body.pro #res{background:#fff;border:1px solid #e1e6ee;border-radius:10px;box-shadow:0 12px 32px -12px rgba(16,24,40,.25)}
+body.pro #res button:hover{background:#f3f6fa}
+/* sidebar */
+body.pro .side{margin:0;border-radius:0;border:0;border-right:1px solid #e1e6ee;background:#fff;box-shadow:none;padding:16px 12px}
+body.pro .nav{border-radius:8px;color:#2b3646}
+body.pro .nav:hover{background:#f3f6fa}
+body.pro .nav[aria-current=page]{background:#e8f2fb;color:#0063a8;border-color:transparent;font-weight:600;box-shadow:inset 3px 0 0 #0072bc}
+body.pro .nav .dot{box-shadow:none}
+body.pro .side small{color:#7b8595}
+/* figures, chart */
+body.pro .fg b{color:#0b1f3a}
+body.pro .mx svg rect{fill:#0072bc;opacity:.06}
+body.pro .mx svg .q{fill:#0b1f3a;opacity:.7}
+/* chat */
+body.pro .chat{border-radius:12px}
+body.pro .chd{background:#0072bc;color:#fff;border-bottom:0}
+body.pro .chd b{color:#fff}body.pro .chd span{color:rgba(255,255,255,.85)}
+body.pro .cav{box-shadow:inset 0 0 0 8px #0072bc,0 0 0 2px rgba(255,255,255,.6)}
+body.pro .onl{color:#c8f7dc!important}body.pro .onl::before{background:#5ee6a0;box-shadow:none}
+body.pro .msgs{background:#f7f9fc;scrollbar-color:#c5cedb transparent}
+body.pro .msgs::-webkit-scrollbar-thumb{background:#c5cedb}
+body.pro .m{border-radius:12px}
+body.pro .m.a{background:#fff;border:1px solid #e1e6ee;box-shadow:none}
+body.pro .m.u{background:#0072bc;box-shadow:none}
+body.pro .who{color:#0063a8}
+body.pro .who::before{box-shadow:none}
+body.pro .sug button{background:#fff;border:1px solid #cdd5e0;border-radius:999px;color:#0b1f3a;box-shadow:none}
+body.pro .sug button:hover{border-color:#0072bc;color:#0063a8;transform:none}
+body.pro .thinking i{background:#0072bc}
+body.pro .approve{border-color:#9cc3e3;background:#f6faff}
+/* agent plan */
+body.pro .pt{background:#fff;border:1px solid #e1e6ee;border-radius:12px;box-shadow:0 1px 2px rgba(16,24,40,.05);opacity:.8}
+body.pro .pt:hover{transform:none;opacity:1;border-color:#c8d4e3}
+body.pro .pt.on{background:#f4f9fe;border:1.5px solid #0072bc;box-shadow:0 0 0 4px rgba(0,114,188,.12);animation:none;transform:none;opacity:1}
+body.pro .pt.done{background:#fff;border-color:#bfe3cf;opacity:1}
+body.pro .pt:not(:last-child)::after{background:#cdd5e0;box-shadow:none}
+body.pro .pt:not(:last-child)::before{border-color:#cdd5e0}
+body.pro .pt.done:not(:last-child)::after{background:#11834f;box-shadow:none}
+body.pro .pt.done:not(:last-child)::before{border-color:#11834f}
+body.pro .pt.on:not(:last-child)::after{background:linear-gradient(90deg,#0072bc calc(var(--f,0)*100%),#cdd5e0 calc(var(--f,0)*100%));box-shadow:none}
+body.pro .pic{background:#eef4fa;border:0;color:#0063a8;box-shadow:none}
+body.pro .pt.on .pic{background:#0072bc;color:#fff;animation:picpro 1.4s ease-in-out infinite;box-shadow:0 0 0 4px rgba(0,114,188,.15)}
+@keyframes picpro{50%{box-shadow:0 0 0 7px rgba(0,114,188,.06)}}
+body.pro .pt.done .pic{background:#e7f6ee;color:#11834f}
+body.pro .pt.done .pic::after{background:#11834f;box-shadow:0 0 0 2px #fff}
+body.pro .pt.on .stt{color:#0063a8}body.pro .pt.done .stt,body.pro .pt .tm{color:#11834f}
+body.pro .pb{background:#eef2f7}body.pro .pb i{background:#0072bc;box-shadow:none}body.pro .pt.done .pb i{background:#11834f}
+body.pro .tool{background:#eef4fa;color:#0063a8}
+body.pro .tool.model{background:#e8f6fb;color:#00739f}
+body.pro .tool.gd{background:#e7f6ee;color:#11834f}
+body.pro .pbtn{background:#fff;border:1px solid #cdd5e0;box-shadow:none}
+/* live trace */
+body.pro .lv div{background:#f7f9fc;border:1px solid #e6ebf2;box-shadow:none}
+body.pro .lv.live div{border-color:#9cc9ea;box-shadow:none}
+body.pro .lv.live b{color:#0063a8;text-shadow:none}
+body.pro .lvtag.run{background:#e8f2fb;color:#0063a8}body.pro .lvtag.run::before{box-shadow:none}
+body.pro .lvtag.ok{background:#e7f6ee;color:#11834f}
+body.pro .wfbox{background:#fafbfd;border:1px solid #e6ebf2;box-shadow:none}
+body.pro .wt{background:#eef2f7}
+body.pro .k-req{--c1:#a3b1c6;--c2:#64748b}body.pro .k-model{--c1:#4aa3df;--c2:#0072bc}body.pro .k-tool{--c1:#6fd0f2;--c2:#0091d0}body.pro .k-guard{--c1:#6fd3a0;--c2:#11834f}
+body.pro .wr.on .wb{box-shadow:none}
+body.pro .now{background:#0072bc;box-shadow:none}
+body.pro .ln .ev{color:#0063a8}body.pro .ln .ev.tl{color:#00739f}body.pro .ln .ev.gd{color:#11834f}body.pro .ln .ev.wn{color:#c4361f}
+body.pro .feed{background:#fff}
+/* behind the scenes */
+body.pro .stage.on{border-color:#0072bc;box-shadow:0 0 0 3px rgba(0,114,188,.14)}
+body.pro .stage.on .sn{background:#0072bc;box-shadow:none}
+body.pro .track b{background:#0072bc;box-shadow:none}
+body.pro .track i{background:#0072bc;box-shadow:0 0 0 4px rgba(0,114,188,.2)}
+body.pro .tabs button[aria-selected=true]{background:#eef4fa;border-color:#cfe0f1;box-shadow:none}
+@media(max-width:820px){body.pro .side{border-right:0;border-bottom:1px solid #e1e6ee;padding:8px}}
+body.pro .rank a{color:#0b1f3a}body.pro .rank a:hover{color:#0063a8}
+/* pro + light blue liquid glass */
+body.pro{--b1:#b8d7ff;--b2:#bdeeff;--b3:#c9d6ff;--b4:#d6f3ff;--edge:rgba(255,255,255,.85);--line:rgba(16,60,130,.1)}
+body.pro .liquid{background:linear-gradient(160deg,#e6f1ff 0,#f4f9ff 48%,#e2f0ff 100%)}
+body.pro .liquid i{display:block;opacity:.95}
+body.pro .glass{background:linear-gradient(150deg,rgba(255,255,255,.78),rgba(255,255,255,.52));-webkit-backdrop-filter:blur(22px) saturate(170%);backdrop-filter:blur(22px) saturate(170%);border:1px solid rgba(255,255,255,.9);border-radius:16px;box-shadow:inset 0 1px 0 #fff,0 12px 32px -16px rgba(20,70,150,.28)}
+body.pro .hov::after{display:block;background:radial-gradient(260px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.65),transparent 62%)}
+body.pro .hov:hover{border-color:#fff;box-shadow:inset 0 1px 0 #fff,0 0 0 1px rgba(0,114,188,.18),0 18px 40px -16px rgba(20,70,150,.38)}
+body.pro .btn{background:linear-gradient(180deg,#36a3ec 0,#0a7fcc 50%,#0067ad 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 6px 16px -8px rgba(0,114,188,.7)}
+body.pro .btn:hover{background:linear-gradient(180deg,#45adf0 0,#0b86d6 50%,#006fb8 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 8px 22px -8px rgba(0,114,188,.8)}
+body.pro .ghost{background:rgba(255,255,255,.7);border-color:rgba(0,90,160,.18);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+body.pro .field{background:rgba(255,255,255,.85);border-color:rgba(0,90,160,.16)}
+/* header + sidebar as glass */
+body.pro .topnav{background:rgba(255,255,255,.66);-webkit-backdrop-filter:blur(20px) saturate(170%);backdrop-filter:blur(20px) saturate(170%);border-bottom:1px solid rgba(255,255,255,.9);box-shadow:0 6px 24px -14px rgba(20,70,150,.3)}
+body.pro .topnav .srch .field{background-color:rgba(230,240,252,.85);border-color:rgba(255,255,255,.9)}
+body.pro .side{background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(20px) saturate(170%);backdrop-filter:blur(20px) saturate(170%);border-right:1px solid rgba(255,255,255,.85)}
+body.pro .nav[aria-current=page]{background:linear-gradient(90deg,rgba(0,114,188,.14),rgba(0,145,208,.06))}
+body.pro .ham{background:rgba(255,255,255,.7)}
+/* chat: slimmer light-blue header */
+body.pro .chd{padding:8px 14px;gap:10px;color:#0b1f3a;background:linear-gradient(100deg,rgba(0,114,188,.14),rgba(0,163,224,.1));border-bottom:1px solid rgba(255,255,255,.9)}
+body.pro .chd b{color:#0b1f3a;font-size:14px;line-height:1.25}
+body.pro .chd span{color:#5d6879;font-size:12px}
+body.pro .cav{width:28px;height:28px;box-shadow:inset 0 0 0 6px #e6f1ff,0 0 0 1px rgba(0,114,188,.35)}
+body.pro .onl{color:#11834f!important;font-size:12px!important}body.pro .onl::before{background:#11b065}
+body.pro .msgs{background:rgba(236,245,255,.45)}
+body.pro .m.a{background:rgba(255,255,255,.88);border-color:#fff;box-shadow:0 4px 14px -8px rgba(20,70,150,.25)}
+body.pro .m.u{background:linear-gradient(150deg,#3aa6ee,#0072bc);box-shadow:0 6px 16px -8px rgba(0,114,188,.6)}
+body.pro .sug button{background:rgba(255,255,255,.8);border-color:rgba(0,90,160,.18)}
+/* plan + trace glass */
+body.pro .pt{background:rgba(255,255,255,.8);border-color:rgba(255,255,255,.95);box-shadow:inset 0 1px 0 #fff,0 8px 20px -12px rgba(20,70,150,.3)}
+body.pro .pt.on{background:linear-gradient(160deg,rgba(234,245,255,.95),rgba(214,236,255,.9));border:1.5px solid #3a9be0;box-shadow:0 0 0 4px rgba(0,114,188,.12),0 12px 28px -12px rgba(0,114,188,.45)}
+body.pro .pt.done{background:rgba(255,255,255,.85);border-color:#bfe3cf}
+body.pro .pic{background:rgba(0,114,188,.09)}
+body.pro .pt.on .pic{background:linear-gradient(150deg,#3aa6ee,#0072bc)}
+body.pro .lv div{background:rgba(255,255,255,.6);border-color:rgba(255,255,255,.9)}
+body.pro .wfbox{background:rgba(255,255,255,.55);border-color:rgba(255,255,255,.9)}
+body.pro .feed{background:rgba(255,255,255,.6);border-color:rgba(255,255,255,.9)}
+body.pro .wt{background:rgba(0,90,160,.08)}
+body.pro .figs .fg b{background:linear-gradient(180deg,#0b1f3a 40%,#0072bc);-webkit-background-clip:text;background-clip:text;color:transparent}
+body.pro .side,body.pro .topnav{border-radius:0}
+</style>
+</head>
+<body class="night">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></symbol><symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol><symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></symbol><symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></symbol><symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></symbol><symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h13"/><path d="M8 7h7"/></symbol><symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3c.6 4.6 2.4 6.4 7 7-4.6.6-6.4 2.4-7 7-.6-4.6-2.4-6.4-7-7 4.6-.6 6.4-2.4 7-7z"/><path d="M19 15c.2 1.5.8 2.1 2 2.3-1.2.2-1.8.8-2 2.2-.2-1.4-.8-2-2.1-2.2 1.3-.2 1.9-.8 2.1-2.3z"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></symbol><symbol id="i-chat" viewBox="0 0 24 24"><path d="M5 5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-8l-5 4v-4H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/><path d="M8 10h8M8 13h5"/></symbol><symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></symbol><symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol><symbol id="ntt" viewBox="0 0 396.8 80.9"><path fill-rule="evenodd" d="M39.1 80.9 C37.5 80.8 36.1 80.6 35.1 80.3 C33.2 79.7 32.9 79.6 31.4 79.4 C30.4 79.3 29.8 79.2 29.6 79.0 C28.9 78.5 28.2 78.3 26.9 77.9 C26.2 77.7 25.4 77.3 25.1 77.1 C24.8 76.9 24.1 76.6 23.6 76.5 C23.1 76.3 22.4 76.0 22.1 75.7 C21.8 75.5 21.2 75.1 20.7 74.9 C20.2 74.6 19.6 74.3 19.4 74.0 C19.1 73.8 18.7 73.5 18.4 73.4 C17.9 73.1 17.1 72.5 15.8 71.4 C13.5 69.4 12.5 68.5 11.8 67.7 C11.3 67.2 10.5 66.3 9.9 65.7 C9.4 65.2 8.8 64.4 8.6 64.1 C8.5 63.8 8.1 63.3 7.8 63.0 C7.5 62.7 7.2 62.2 7.1 62.0 C6.9 61.8 6.6 61.3 6.4 61.0 C6.1 60.7 5.7 60.1 5.6 59.6 C5.4 59.2 5.2 58.7 5.1 58.6 C4.9 58.4 4.4 57.4 4.0 56.4 C3.8 55.9 3.5 55.3 3.3 55.0 C3.1 54.7 2.8 54.0 2.6 53.4 C2.5 52.9 2.2 52.1 2.1 51.7 C1.6 50.4 1.3 49.2 1.1 47.4 C1.0 46.5 0.8 45.4 0.6 44.8 C0.3 43.5 -0.1 37.0 0.1 35.1 C0.1 34.4 0.2 33.3 0.4 32.6 C0.7 31.3 0.8 30.7 1.1 28.6 C1.4 26.2 1.5 25.7 1.9 24.9 C2.2 24.4 2.5 23.5 2.6 22.9 C2.8 22.2 3.0 21.6 3.4 21.1 C3.6 20.6 4.0 19.9 4.1 19.4 C4.4 18.6 4.9 17.7 5.1 17.6 C5.2 17.5 5.4 17.1 5.6 16.6 C5.8 16.1 6.0 15.6 6.3 15.4 C6.6 15.1 6.9 14.7 7.1 14.4 C7.3 14.1 7.6 13.6 7.9 13.3 C8.1 13.0 8.4 12.6 8.5 12.4 C8.6 12.2 8.8 12.0 8.9 11.9 C9.1 11.8 9.5 11.3 9.8 10.9 C11.2 9.1 13.1 7.3 15.0 6.1 C15.4 5.8 15.9 5.4 16.2 5.2 C16.4 4.9 16.8 4.7 17.1 4.6 C17.4 4.5 17.8 4.2 18.0 4.0 C18.3 3.8 19.0 3.4 19.5 3.2 C20.6 2.9 21.3 2.5 21.9 2.1 C22.2 1.9 22.9 1.6 23.8 1.4 C24.5 1.3 25.4 1.0 25.8 0.8 C26.7 0.4 27.7 0.2 31.7 0.2 C35.8 0.1 36.8 0.2 38.5 0.8 C41.2 1.7 44.1 1.7 46.6 0.9 C47.0 0.7 47.7 0.5 48.1 0.4 C50.8 -0.2 57.9 0.1 59.5 0.9 C60.0 1.1 60.7 1.3 62.1 1.5 C63.1 1.7 63.5 1.8 64.2 2.3 C64.4 2.5 65.0 2.8 65.6 3.0 C66.1 3.2 66.8 3.6 67.1 3.8 C67.5 4.1 68.1 4.4 68.5 4.6 C68.9 4.8 69.3 5.1 69.4 5.2 C69.6 5.4 70.1 5.7 70.5 6.0 C71.0 6.3 71.5 6.7 71.6 6.9 C71.8 7.1 72.1 7.3 72.3 7.4 C72.5 7.5 72.9 7.8 73.1 8.1 C73.4 8.4 73.8 8.8 74.1 9.0 C74.3 9.1 74.6 9.4 74.7 9.7 C74.9 9.9 75.2 10.2 75.4 10.4 C75.7 10.5 76.0 10.9 76.2 11.2 C76.4 11.4 76.8 11.9 77.0 12.1 C77.3 12.4 77.6 12.8 77.7 13.1 C77.8 13.5 78.1 14.0 78.3 14.3 C78.5 14.6 79.0 15.2 79.2 15.7 C79.5 16.1 79.8 16.5 79.9 16.5 C80.0 16.6 80.3 17.1 80.6 17.6 C80.9 18.1 81.2 18.8 81.4 19.1 C81.6 19.4 81.9 20.2 82.1 20.9 C82.3 21.6 82.6 22.3 82.8 22.7 C83.2 23.3 83.5 24.3 83.7 25.5 C83.8 26.4 84.0 27.1 84.5 28.1 C84.8 28.9 84.9 29.1 85.2 32.7 C85.5 37.0 85.6 38.8 85.3 42.2 C85.0 46.6 84.9 47.4 84.2 48.8 C84.0 49.4 83.7 50.3 83.7 50.7 C83.6 51.9 83.4 52.4 82.9 53.1 C82.7 53.4 82.4 54.2 82.2 54.7 C81.8 55.8 81.5 56.6 81.1 57.1 C81.0 57.3 80.8 57.7 80.7 58.0 C80.3 59.2 77.7 63.4 77.0 64.1 C76.8 64.3 76.4 64.8 76.1 65.2 C75.8 65.6 75.5 66.0 75.3 66.1 C75.1 66.2 74.9 66.4 74.8 66.6 C74.7 66.8 74.0 67.5 73.2 68.2 C72.5 68.9 71.8 69.6 71.6 69.9 C71.4 70.2 71.1 70.4 71.0 70.4 C70.8 70.5 70.4 70.8 70.1 71.1 C69.8 71.3 69.4 71.7 69.1 71.9 C68.9 72.0 68.4 72.4 68.1 72.7 C67.7 73.1 67.1 73.4 66.8 73.5 C66.4 73.7 65.9 74.0 65.7 74.2 C65.4 74.4 64.9 74.7 64.6 74.9 C64.2 75.1 63.6 75.5 63.3 75.7 C62.9 76.0 62.3 76.3 62.0 76.4 C61.6 76.6 60.9 76.9 60.3 77.2 C59.8 77.5 58.8 77.9 58.2 78.1 C57.5 78.2 56.7 78.6 56.2 78.8 C55.3 79.3 55.3 79.3 53.3 79.6 C52.3 79.7 51.4 79.9 50.8 80.1 C49.5 80.6 48.6 80.7 46.1 80.9 C44.2 81.0 40.2 81.0 39.1 80.9Z M45.1 70.4 C47.3 70.2 47.9 70.1 50.3 69.4 C50.8 69.2 51.7 69.0 52.3 68.9 C53.2 68.8 53.6 68.6 54.4 68.2 C54.9 67.9 55.5 67.6 55.9 67.5 C56.7 67.4 57.4 67.2 57.8 66.7 C58.1 66.5 58.6 66.2 59.0 66.0 C59.5 65.8 60.3 65.2 61.0 64.7 C61.6 64.2 62.5 63.5 63.0 63.2 C63.5 62.8 64.3 62.1 64.8 61.6 C65.3 61.1 65.9 60.5 66.1 60.3 C66.3 60.1 66.7 59.8 66.9 59.6 C67.0 59.4 67.5 58.9 67.8 58.5 C68.2 58.1 68.6 57.6 68.7 57.4 C68.8 57.1 69.1 56.7 69.4 56.4 C69.6 56.1 69.9 55.6 70.1 55.3 C70.2 54.9 70.5 54.4 70.8 54.0 C71.2 53.6 71.5 53.1 71.6 52.6 C71.7 52.2 72.0 51.5 72.3 51.1 C72.5 50.6 72.9 49.5 73.2 48.6 C73.4 47.8 73.8 46.8 74.0 46.5 C74.4 45.6 74.5 45.0 74.7 41.9 C74.9 38.3 74.9 37.3 74.7 34.2 C74.5 31.6 74.3 30.5 73.7 28.9 C73.5 28.5 73.3 27.7 73.2 27.3 C73.1 26.2 72.8 25.4 72.3 24.7 C72.1 24.4 71.8 23.9 71.7 23.6 C71.5 23.0 70.4 21.3 69.5 20.1 C69.2 19.7 68.8 19.1 68.7 18.9 C68.5 18.6 67.6 17.7 66.7 16.8 C64.0 14.1 63.6 13.6 63.0 13.5 C62.7 13.4 62.2 13.1 61.9 12.8 C60.9 12.0 57.4 10.8 56.0 10.8 C55.3 10.8 54.8 11.0 54.8 11.3 C54.8 11.5 55.6 12.8 56.1 13.2 C56.3 13.5 56.6 13.9 56.7 14.2 C56.8 14.5 57.1 15.0 57.4 15.3 C57.6 15.7 58.0 16.3 58.1 16.7 C58.3 17.1 58.6 17.7 58.8 18.0 C59.3 18.9 59.5 19.4 59.7 20.8 C59.8 21.5 60.0 22.3 60.1 22.6 C60.6 24.0 60.9 26.8 60.8 29.4 C60.7 31.0 60.6 31.3 60.3 32.1 C60.1 32.5 59.8 33.4 59.7 33.9 C59.5 34.8 59.2 35.4 58.9 35.8 C58.8 35.9 58.5 36.4 58.2 37.1 C57.9 37.7 57.5 38.3 57.3 38.5 C57.1 38.7 56.9 39.1 56.7 39.4 C56.3 40.1 55.4 41.0 54.2 41.9 C53.9 42.1 53.5 42.5 53.2 42.7 C53.0 42.9 52.5 43.3 52.1 43.4 C51.7 43.6 51.1 43.9 50.9 44.1 C50.6 44.3 49.6 44.7 48.6 44.9 C47.6 45.2 46.4 45.6 45.9 45.8 C45.1 46.1 44.9 46.1 42.7 46.1 L40.4 46.2 L39.5 45.8 C38.9 45.6 37.9 45.2 37.2 45.1 C36.1 44.8 35.6 44.6 35.1 44.2 C34.6 44.0 33.9 43.6 33.4 43.4 C32.6 43.1 32.3 42.9 31.0 41.7 C29.3 40.1 29.0 39.7 27.9 38.2 C27.0 36.9 26.9 36.8 26.7 36.0 C26.6 35.6 26.3 34.9 26.0 34.5 C25.5 33.7 25.3 33.0 25.2 31.4 C25.1 31.0 25.0 30.2 24.9 29.8 C24.7 29.0 24.7 27.3 25.0 24.0 C25.2 22.0 25.4 21.5 26.0 20.3 C26.2 19.9 26.4 19.1 26.6 18.6 C26.8 17.4 26.9 17.2 27.4 16.6 C27.7 16.3 28.1 15.6 28.4 15.0 C28.7 14.4 29.0 13.8 29.2 13.6 C29.3 13.4 29.5 13.0 29.6 12.8 C29.7 12.5 30.0 12.1 30.3 11.8 C30.5 11.6 30.8 11.3 30.8 11.3 C30.8 11.2 30.6 11.0 30.4 10.9 C29.9 10.6 28.0 10.9 26.8 11.4 C26.2 11.7 25.5 11.9 25.1 12.1 C24.6 12.2 24.2 12.4 23.9 12.7 C23.6 12.9 23.1 13.2 22.7 13.4 C22.0 13.7 21.3 14.1 19.3 16.1 C17.5 17.7 15.7 20.1 14.6 22.4 C14.4 22.8 14.1 23.5 13.8 23.8 C13.6 24.1 13.2 24.8 13.1 25.3 C12.9 25.8 12.5 26.7 12.2 27.3 C11.9 28.1 11.7 28.8 11.6 29.8 C11.5 30.6 11.2 31.7 11.0 32.3 C10.5 33.6 10.4 34.8 10.3 37.2 C10.2 38.9 10.3 39.5 10.5 41.1 C10.6 42.2 10.9 43.5 11.1 44.0 C11.2 44.5 11.5 45.5 11.6 46.1 C11.8 47.8 11.8 47.9 12.4 49.0 C12.6 49.5 13.0 50.4 13.2 51.0 C13.4 51.8 13.6 52.3 13.9 52.6 C14.2 52.9 14.4 53.3 14.6 54.0 C14.8 54.8 14.9 55.0 15.3 55.4 C15.6 55.6 16.1 56.2 16.3 56.6 C17.3 58.0 19.9 61.2 20.1 61.2 C20.2 61.2 20.7 61.7 21.2 62.2 C22.2 63.1 23.2 63.9 24.3 64.5 C24.6 64.7 25.0 65.0 25.2 65.1 C25.4 65.3 26.1 65.7 26.6 66.0 C27.1 66.3 27.8 66.7 28.1 67.0 C28.5 67.2 29.0 67.4 29.6 67.6 C30.0 67.7 30.8 68.0 31.2 68.2 C32.1 68.7 32.8 68.9 34.3 69.2 C34.8 69.3 35.9 69.6 36.7 69.8 C38.6 70.4 41.2 70.6 45.1 70.4Z M134.0 60.7 C133.8 60.7 133.5 60.6 133.3 60.5 C133.1 60.4 132.4 60.1 131.8 60.0 C130.9 59.7 130.6 59.5 130.1 59.1 C129.8 58.8 129.4 58.5 129.3 58.4 C129.1 58.3 128.9 58.0 128.7 57.7 C128.5 57.3 128.2 56.9 128.0 56.7 C127.8 56.5 127.4 55.9 127.2 55.4 C126.9 54.9 126.6 54.2 126.3 54.0 C126.1 53.7 125.8 53.2 125.7 52.9 C125.6 52.6 125.3 52.0 125.1 51.6 C124.8 51.2 124.5 50.6 124.3 50.1 C124.1 49.7 123.7 49.0 123.4 48.6 C123.1 48.2 122.8 47.7 122.7 47.4 C122.5 47.1 122.3 46.5 122.0 46.2 C121.8 45.9 121.4 45.2 121.2 44.7 C121.0 44.1 120.6 43.4 120.4 43.1 C120.2 42.7 119.9 42.1 119.7 41.7 C119.6 41.2 119.3 40.6 119.1 40.3 C118.9 39.9 118.6 39.2 118.3 38.7 C118.1 38.1 117.7 37.4 117.4 37.0 C117.1 36.6 116.8 36.0 116.6 35.6 C116.5 35.1 116.2 34.6 116.0 34.3 C115.8 34.0 115.4 33.3 115.2 32.8 C114.9 32.2 114.5 31.4 114.3 31.1 C114.1 30.8 113.8 30.2 113.7 29.8 C113.5 29.0 113.1 28.6 112.6 28.9 C112.5 28.9 112.3 29.2 112.3 29.3 C112.3 29.5 112.2 29.8 112.2 29.9 C112.1 30.0 112.1 36.5 112.1 44.3 C112.1 54.1 112.1 58.6 112.0 59.0 C111.9 59.3 111.7 59.7 111.5 59.9 L111.2 60.3 L107.5 60.2 L103.8 60.2 L103.5 59.8 C103.3 59.6 103.1 59.2 103.0 58.9 C102.9 58.6 102.9 54.2 102.9 47.2 C102.9 41.0 102.8 35.9 102.8 35.8 C102.7 35.6 103.0 26.1 103.1 25.4 C103.2 25.1 103.3 24.5 103.3 24.1 C103.4 23.6 103.5 23.2 103.8 22.8 C104.0 22.5 104.4 21.8 104.6 21.4 C104.8 20.9 105.1 20.5 105.2 20.3 C105.3 20.2 106.1 19.7 106.9 19.2 L108.4 18.3 L110.0 18.2 C112.1 17.9 114.0 18.1 114.8 18.5 C116.8 19.7 116.9 19.8 118.4 21.4 C119.1 22.1 119.5 22.7 119.6 23.2 C119.8 23.5 120.1 24.1 120.4 24.4 C120.7 24.8 121.0 25.4 121.1 25.8 C121.3 26.1 121.6 26.7 121.9 27.1 C122.2 27.5 122.5 28.0 122.6 28.5 C122.7 29.1 122.9 29.4 123.2 29.8 C123.5 30.1 123.9 30.8 124.2 31.4 C124.5 32.1 124.8 32.6 124.9 32.7 C125.2 33.0 125.6 33.7 125.7 34.4 C125.8 34.8 126.1 35.4 126.3 35.7 C126.6 36.1 126.9 36.8 127.1 37.3 C127.3 37.8 127.6 38.3 127.8 38.5 C128.2 39.0 128.5 39.4 128.7 40.0 C128.8 40.4 129.0 40.9 129.2 41.2 C129.4 41.5 129.8 42.2 130.0 42.7 C130.2 43.3 130.6 44.0 130.9 44.4 C131.2 44.8 131.5 45.4 131.7 45.8 C131.8 46.3 132.1 46.8 132.3 47.1 C132.5 47.4 132.9 48.0 133.1 48.4 C133.3 48.9 133.6 49.3 133.7 49.4 C133.9 49.6 134.3 49.5 134.5 49.1 C134.6 48.9 134.6 45.1 134.7 34.2 C134.7 23.3 134.7 19.6 134.9 19.2 C135.1 18.4 135.3 18.3 139.3 18.4 C141.2 18.4 142.9 18.4 143.0 18.5 C143.4 18.6 143.8 19.0 144.0 19.5 C144.1 19.7 144.2 20.2 144.2 20.9 C144.1 21.5 144.2 22.4 144.3 22.9 C144.4 23.8 144.4 24.1 144.2 24.9 C144.0 25.7 144.0 27.3 144.0 39.0 C144.0 46.2 144.0 52.2 144.0 52.2 C143.9 52.3 143.8 52.9 143.8 53.7 C143.5 55.8 143.5 56.0 143.0 56.6 C142.7 56.9 142.4 57.4 142.3 57.7 C142.1 58.0 141.9 58.3 141.7 58.5 C141.5 58.6 141.1 59.0 140.7 59.3 C140.3 59.7 140.0 59.9 139.6 59.9 C139.4 60.0 138.6 60.2 138.0 60.3 C137.3 60.5 136.4 60.6 135.9 60.6 C135.4 60.6 134.9 60.7 134.7 60.7 C134.5 60.8 134.2 60.8 134.0 60.7Z M237.6 60.2 C236.1 60.2 235.9 60.2 235.6 59.9 C235.0 59.4 235.0 59.2 235.0 56.0 C235.0 54.4 235.0 45.7 235.0 36.7 C235.0 24.4 235.0 20.2 235.1 19.8 C235.3 19.0 235.6 18.6 236.0 18.5 C236.3 18.5 242.3 18.4 249.4 18.4 L262.4 18.4 L264.4 18.8 C266.9 19.4 268.2 19.7 268.8 20.0 C269.4 20.4 270.5 21.3 271.5 22.4 C272.3 23.3 272.4 23.5 272.8 24.7 C273.0 25.4 273.4 26.3 273.5 26.8 C274.0 28.0 274.1 30.2 274.2 38.1 C274.3 44.8 274.2 47.2 273.8 50.5 C273.7 51.8 273.6 52.3 273.3 52.8 C273.1 53.2 272.8 53.9 272.8 54.2 C272.5 55.3 272.4 55.5 270.9 57.0 C269.7 58.1 269.4 58.4 268.8 58.6 C268.5 58.7 267.8 59.0 267.3 59.3 C266.2 59.8 265.7 59.9 261.6 60.1 C258.7 60.3 240.6 60.4 237.6 60.2Z M163.7 60.1 C162.0 60.0 161.4 59.8 161.0 59.2 C160.8 58.9 160.8 57.8 160.8 43.8 C160.7 32.4 160.7 28.6 160.6 28.3 C160.5 27.9 160.3 27.8 159.8 27.5 C159.3 27.2 159.2 27.2 154.1 27.2 C149.0 27.1 148.9 27.1 148.3 26.8 C147.4 26.4 147.4 26.5 147.0 23.7 C147.0 23.4 147.0 23.0 147.1 22.7 C147.2 22.5 147.3 21.8 147.4 21.3 C147.6 19.7 147.9 19.1 148.7 18.6 C149.0 18.5 150.5 18.4 163.1 18.4 C170.8 18.4 177.9 18.4 178.9 18.3 C181.2 18.2 182.9 18.5 183.3 18.9 C183.5 19.0 183.7 19.3 183.7 19.5 C183.8 19.8 183.9 21.2 183.9 22.8 C183.9 25.5 183.9 25.7 183.7 26.2 C183.5 26.6 183.3 26.7 182.8 26.9 C182.1 27.2 181.8 27.2 176.8 27.1 C173.2 27.1 171.4 27.2 171.3 27.2 C171.1 27.3 170.9 27.7 170.8 28.0 C170.6 28.6 170.6 29.8 170.5 43.9 C170.4 60.1 170.5 59.6 169.8 60.0 C169.5 60.2 166.0 60.3 163.7 60.1Z M201.1 60.0 C200.4 59.4 200.4 59.7 200.4 43.8 C200.4 33.7 200.4 29.0 200.3 28.7 C200.1 27.9 199.7 27.5 199.0 27.3 C198.4 27.2 197.5 27.1 193.6 27.2 C191.0 27.2 188.7 27.1 188.4 27.1 C188.1 27.0 187.7 26.8 187.5 26.6 C187.1 26.3 187.1 26.2 187.0 25.2 C187.0 24.6 187.0 23.1 187.0 21.9 C187.1 20.0 187.1 19.8 187.4 19.2 C187.8 18.4 188.2 18.4 191.2 18.3 C192.7 18.3 194.4 18.3 195.1 18.4 C195.8 18.4 197.3 18.4 198.6 18.4 C199.8 18.4 205.7 18.4 211.6 18.4 L222.4 18.4 L222.7 18.7 C223.1 19.1 223.2 19.9 223.2 23.3 C223.1 26.5 223.1 26.6 222.3 27.0 C221.9 27.1 221.0 27.2 217.1 27.2 C210.4 27.2 210.1 27.3 209.9 28.3 C209.8 28.6 209.8 35.1 209.8 43.9 C209.7 58.0 209.7 59.0 209.5 59.4 C209.4 59.6 209.2 59.9 209.0 60.0 C208.8 60.1 207.4 60.1 205.0 60.2 C201.5 60.2 201.4 60.2 201.1 60.0Z M287.0 60.1 C285.4 60.0 284.5 59.7 283.6 59.2 C283.2 58.9 282.7 58.6 282.3 58.5 C281.6 58.2 280.7 57.4 280.1 56.4 C279.9 56.0 279.5 55.6 279.4 55.5 C278.8 55.1 278.8 55.0 278.2 50.2 C277.9 47.5 277.9 45.4 278.2 44.1 C278.3 43.6 278.5 42.5 278.6 41.7 C278.8 40.0 278.9 39.6 279.4 39.1 C279.6 39.0 279.9 38.6 280.1 38.2 C280.5 37.4 281.5 36.3 282.2 36.0 C282.5 35.8 283.3 35.5 283.9 35.2 L285.1 34.6 L287.6 34.5 C289.0 34.4 294.1 34.4 298.9 34.4 C306.9 34.4 307.6 34.4 307.9 34.2 C308.5 33.9 308.5 33.5 308.4 32.2 C308.1 30.1 307.1 28.5 305.5 27.7 C305.0 27.5 304.7 27.4 302.8 27.3 C296.6 27.1 294.6 27.1 291.8 27.2 C290.1 27.2 287.0 27.2 285.0 27.2 C280.9 27.1 280.8 27.1 280.5 26.4 C280.2 25.9 280.3 19.5 280.5 19.2 C280.9 18.5 280.4 18.5 291.9 18.5 C297.8 18.5 303.9 18.5 305.5 18.5 C308.1 18.6 308.4 18.6 308.9 18.9 C309.2 19.0 309.9 19.3 310.6 19.4 C312.0 19.7 312.4 19.8 313.5 20.5 C314.1 20.9 314.4 21.3 314.6 21.6 C314.7 21.8 315.1 22.2 315.3 22.5 C315.7 22.7 315.9 23.0 316.0 23.4 C316.1 23.7 316.3 24.3 316.6 24.7 C317.0 25.4 317.4 26.8 317.6 27.8 C317.7 28.5 317.7 50.8 317.6 55.7 L317.6 59.5 L317.2 59.9 L316.7 60.3 L302.5 60.2 C294.7 60.2 287.7 60.2 287.0 60.1Z M334.2 60.1 C333.6 59.9 333.1 59.4 333.1 58.8 C333.0 58.5 333.0 51.6 333.0 43.4 C332.9 29.9 332.9 28.5 332.7 28.1 C332.3 27.2 332.2 27.2 326.4 27.1 C319.3 27.0 319.8 27.3 319.7 22.9 C319.7 21.4 319.7 20.0 319.8 19.8 C319.9 19.3 320.6 18.7 321.2 18.5 C321.5 18.4 324.5 18.4 329.6 18.4 C333.9 18.4 338.8 18.4 340.5 18.4 C342.3 18.3 344.0 18.4 344.6 18.4 C345.3 18.5 346.7 18.5 348.4 18.5 C349.8 18.4 351.9 18.4 352.8 18.4 C354.3 18.4 354.6 18.4 355.1 18.7 C356.2 19.2 356.2 19.3 356.3 22.7 C356.4 26.3 356.4 26.4 355.1 26.9 L354.3 27.3 L349.2 27.2 L344.0 27.1 L343.6 27.4 C342.8 28.1 342.9 27.5 342.8 44.0 C342.7 60.3 342.8 59.6 342.0 59.9 C341.3 60.2 335.0 60.4 334.2 60.1Z M366.8 60.1 C364.5 59.9 363.3 59.7 362.4 59.2 C361.9 58.9 361.3 58.5 360.9 58.4 C360.5 58.2 360.2 57.9 359.9 57.5 C359.7 57.2 359.3 56.7 359.0 56.3 C358.7 56.0 358.4 55.5 358.3 55.0 C358.2 54.6 357.9 53.7 357.7 53.0 C357.1 51.0 356.8 49.2 356.9 46.9 C357.0 45.8 357.1 44.6 357.2 44.1 C357.3 43.7 357.5 42.7 357.7 41.9 C358.1 40.2 358.4 39.2 358.9 38.6 C359.2 38.4 359.5 37.9 359.7 37.5 C360.1 36.7 360.2 36.6 361.1 36.2 C361.5 36.0 362.2 35.6 362.6 35.4 C364.0 34.6 364.5 34.5 375.9 34.4 C383.3 34.4 385.8 34.3 386.2 34.2 C387.1 33.9 387.5 32.7 387.1 31.6 C387.0 31.4 386.8 30.7 386.7 30.1 C386.6 29.5 386.4 28.9 386.4 28.8 C386.3 28.7 385.6 28.3 384.8 27.9 L383.4 27.2 L380.5 27.2 C378.9 27.2 373.8 27.2 369.2 27.2 C360.2 27.2 360.2 27.2 359.7 26.6 C359.5 26.3 359.4 26.1 359.4 23.1 C359.4 19.9 359.4 19.3 359.9 18.8 C360.2 18.5 360.3 18.5 361.5 18.4 C362.2 18.4 363.1 18.3 363.4 18.4 C363.8 18.4 369.0 18.4 375.0 18.4 C386.8 18.5 386.2 18.4 388.9 19.2 C389.4 19.3 390.1 19.5 390.4 19.6 C390.7 19.6 391.2 19.9 391.6 20.2 C392.1 20.5 392.7 20.8 393.0 21.0 C393.3 21.2 393.8 21.7 394.4 22.4 L395.3 23.5 L395.8 25.3 C396.0 26.3 396.3 27.6 396.5 28.1 C396.7 28.9 396.7 30.0 396.7 41.6 C396.8 48.5 396.8 55.3 396.7 56.6 C396.7 59.3 396.6 59.5 395.7 59.9 C395.2 60.2 394.9 60.2 381.6 60.2 C374.1 60.2 367.4 60.2 366.8 60.1Z M261.3 51.1 C261.7 51.0 262.3 50.7 262.6 50.6 C263.1 50.3 263.1 50.2 264.1 48.2 L264.6 47.2 L264.6 39.6 L264.5 32.1 L264.2 31.2 C264.0 30.8 263.8 30.1 263.8 29.8 C263.6 29.1 263.1 28.4 262.9 28.4 C262.8 28.4 262.3 28.2 261.8 27.9 L260.8 27.5 L258.6 27.4 C255.3 27.3 246.4 27.4 245.8 27.6 C245.2 27.8 244.9 28.0 244.6 28.6 C244.5 28.9 244.4 29.6 244.4 34.2 C244.4 37.1 244.4 41.0 244.4 42.9 C244.4 44.8 244.4 47.1 244.4 48.1 C244.4 49.0 244.4 50.0 244.5 50.1 C244.6 50.3 244.8 50.6 245.1 50.8 L245.5 51.2 L252.2 51.2 C259.7 51.3 260.3 51.3 261.3 51.1Z M307.5 50.9 C308.2 50.5 308.4 50.2 308.4 49.3 C308.4 48.9 308.4 47.6 308.4 46.5 C308.4 43.9 308.3 43.7 307.4 43.3 C306.6 42.8 305.1 42.7 302.6 42.9 C301.3 42.9 298.5 43.0 295.8 42.9 L291.2 42.9 L289.8 43.3 C287.8 43.8 287.7 43.9 287.6 46.7 C287.4 48.9 287.8 50.2 288.6 50.7 C289.5 51.2 289.8 51.2 298.5 51.2 L306.9 51.2 L307.5 50.9Z M386.1 50.9 C386.5 50.7 386.8 50.5 387.1 50.1 C387.4 49.6 387.4 49.7 387.4 46.1 L387.3 44.1 L386.9 43.7 C386.2 43.0 386.1 43.0 382.6 43.0 C376.8 43.0 376.2 43.0 374.2 43.0 C373.1 42.9 371.9 42.9 371.4 42.8 C370.8 42.7 370.5 42.8 369.3 43.2 C368.5 43.4 367.7 43.7 367.5 43.8 C367.1 44.1 366.9 44.7 366.9 45.4 C366.9 45.7 366.8 46.2 366.7 46.6 C366.5 47.3 366.5 47.4 366.7 48.1 C366.8 48.6 367.0 49.3 367.3 49.7 C367.9 51.2 368.0 51.2 378.7 51.2 C385.4 51.2 385.6 51.2 386.1 50.9Z M44.7 35.2 C45.0 35.1 45.6 34.8 46.1 34.6 C46.9 34.3 47.1 34.2 47.5 33.7 C47.8 33.4 48.2 33.0 48.4 32.8 C48.8 32.5 49.4 31.6 49.4 31.3 C49.4 31.2 49.6 30.6 49.9 30.0 C50.4 28.7 50.6 27.8 50.4 25.9 C50.3 25.0 50.2 24.4 49.9 23.8 C49.7 23.3 49.4 22.4 49.2 21.8 C48.9 20.5 48.8 20.2 48.2 19.6 C48.0 19.3 47.7 18.9 47.6 18.5 C47.2 17.3 44.7 14.5 43.6 13.9 C42.6 13.5 42.3 13.5 41.5 14.2 C40.3 15.3 38.8 16.8 38.5 17.3 C38.4 17.6 38.1 18.0 37.9 18.1 C37.5 18.5 37.2 19.1 36.9 20.1 C36.8 20.5 36.5 21.2 36.2 21.7 L35.7 22.6 L35.5 25.2 C35.4 27.2 35.4 27.9 35.5 29.0 C35.7 30.7 35.8 31.1 36.4 31.7 C36.7 32.1 37.2 32.6 37.4 33.0 C38.0 33.9 38.5 34.3 39.3 34.6 C39.7 34.7 40.4 34.9 40.9 35.1 C41.9 35.4 44.0 35.5 44.7 35.2Z"/></symbol></svg>
+<div class="liquid" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+<section class="login" id="login">
+  <div class="lg-card glass">
+    <svg class="logo" viewBox="0 0 396.8 80.9" role="img" aria-label="NTT DATA"><use href="#ntt"/></svg>
+    <div>
+      <h1>Google Gemini use case hub</h1>
+      <p class="muted" style="margin-top:12px">Working AI agents for HR, Finance, IT Services, Sales and Procurement, built by NTT DATA with Google Cloud.</p>
+    </div>
+    <form id="lf" novalidate>
+      <label for="u">Username</label>
+      <input class="field" id="u" name="u" autocomplete="username" required>
+      <label for="p">Password</label>
+      <div class="pw"><input class="field" id="p" name="p" type="password" autocomplete="current-password" required><button type="button" class="ghost" id="pt" aria-label="Show password">Show</button></div>
+      <div class="err" id="lerr" role="alert"></div>
+      <button class="btn" type="submit">Sign in</button>
+    </form>
+    <p class="fine">All records, names and figures shown are synthetic data.</p>
+  </div>
+  <div class="fig lg-fig" aria-hidden="true"><svg id="net"></svg></div>
+</section>
+
+<div id="app" hidden>
+  <header class="topnav glass">
+    <div class="tn-l"><button class="ham" id="ham" aria-label="Collapse or expand menu"><i></i></button><a href="#home" class="tn-logo" aria-label="NTT DATA home"><svg class="logo" viewBox="0 0 396.8 80.9"><use href="#ntt"/></svg></a><span class="tn-app">Gemini Enterprise use case hub</span></div>
+    <div class="srch"><input class="field" id="q" type="search" placeholder="Search use cases, e.g. invoice, onboarding, RFP" aria-label="Search use cases" autocomplete="off"><div id="res" class="glass"></div></div>
+    <div class="user"><div class="prof"><div class="av">N</div><div class="pn"><b>Nttdata</b><span>NTT DATA</span></div></div><button class="ghost" id="out">Sign out</button></div>
+  </header>
+  <div class="shell"><aside class="side glass" id="side"></aside><main><div id="view"></div></main></div>
+</div>
+
+<script>
+{
+const FN=[
+ {id:'hr',name:'Human Resources',short:'HR',c:'#d63384',blurb:'Policy answers, onboarding, recruiting, sentiment and learning.'},
+ {id:'fin',name:'Finance',short:'Finance',c:'#12935a',blurb:'Accounts payable, close, expenses, collections, contracts and FP&A.'},
+ {id:'it',name:'IT Services',short:'IT',c:'#6f42c1',blurb:'Ticket triage, resolution and knowledge articles.'},
+ {id:'sales',name:'Sales',short:'Sales',c:'#e07b00',blurb:'Account briefs, RFP answers and campaign content.'},
+ {id:'proc',name:'Procurement',short:'Procurement',c:'#0a8fb8',blurb:'Quote comparison and supplier risk monitoring.'}
+];
+const T=(h,rows)=>'<div class="scroll"><table><thead><tr>'+h.map(x=>x[0]==='#'?'<th class="n">'+x.slice(1)+'</th>':'<th>'+x+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map((c,i)=>'<td'+(h[i][0]==='#'?' class="n"':'')+'>'+c+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
+const B=(rows)=>rows.map(r=>'<div class="bar"><span>'+r[0]+'</span><i style="--w:'+r[1]+'%"></i><b>'+r[1]+'%</b></div>').join('');
+const W='<span class="tag t-w">',OK='<span class="tag t-ok">',BL='<span class="tag t-b">',E='</span>';
+const UC=[
+{id:'hr-helpdesk',fn:'hr',name:'HR policy assistant (24/7)',blurb:'Answers leave, benefits, claims and payroll questions with cited policy and the employee\'s own balances.',i:4.8,e:4.8,
+ src:['Employee Handbook (Drive)','Leave Policy v4.2 (SharePoint)','HRIS: leave balances'],
+ steps:['Search Leave Policy v4.2 for carry-forward rules','Read employee leave balance from HRIS','Apply the carry-forward cap to the balance','Compose answer with policy citation'],
+ kpi:[['HR tickets deflected','40 to 60%'],['Answer time','under 10 s'],['Availability','24/7, EN and BM']],
+ guard:'Read-only. Answers only from approved HR sources and the signed-in employee\'s own records.',
+ qa:[['How many days of annual leave can I carry forward, and how many do I have left?',
+  '<p>You can carry forward up to <b>8 days</b> of unused annual leave into next year. Carried days must be used by <b>31 March</b> or they lapse (Leave Policy v4.2, section 3.4).</p><h4>Your balance today</h4>'+T(['Item','#Days'],[['Entitlement 2026','18'],['Taken','9'],['Approved, not yet taken','2'],['<b>Available now</b>','<b>7</b>']])+'<p>All 7 remaining days are within the cap, so nothing will lapse at year end if you leave them unused. Want me to open a leave request for the week of 22 December?</p><p class="note">Source: Leave Policy v4.2 (SharePoint), HRIS balance as of today.</p>'],
+  ['What do I need to submit for an outpatient medical claim?',
+  '<p>For an outpatient claim you need:</p><ol><li>The original clinic receipt, with your name and the visit date</li><li>The medical certificate, if you took sick leave</li><li>The claim form submitted in the HR portal within <b>30 days</b> of the visit</li></ol><p>Panel clinics bill the company directly, so no claim is needed there. Your remaining outpatient limit this year is <b>RM 1,150 of RM 1,500</b>.</p><p class="note">Source: Employee Handbook, Benefits chapter 5.2.</p>']]},
+{id:'hr-onboard',fn:'hr',name:'Onboarding agent',blurb:'Builds the pre-boarding checklist, raises IT and access requests, and drafts the welcome pack and 30/60/90 plan.',i:4.4,e:4.1,
+ src:['HRIS: new hire record','ServiceNow','Onboarding templates (Drive)','Google Calendar'],
+ steps:['Read new hire record from HRIS','Select Finance onboarding template','Draft IT and access requests in ServiceNow','Book orientation and buddy meetings','Draft welcome email and 30/60/90 plan'],
+ kpi:[['HR admin time per hire','about 6 h to 1 h'],['Day-one ready laptop and access','target 100%']],
+ guard:'Creates drafts only. Tickets and invites go out after HR approves.',
+ approve:'Raise 3 ServiceNow requests and send 4 calendar invites',
+ qa:[['Prepare onboarding for Aisyah Rahman, Data Analyst, joining Finance on 2 December.',
+  '<p>Onboarding pack for <b>Aisyah Rahman</b>, Data Analyst, Finance. Start date Wednesday 2 December. Manager: Tan Wei Ming.</p><h4>Pre-boarding checklist</h4>'+T(['Task','Owner','Due','Status'],[['Laptop and accessories','IT','27 Nov',BL+'Drafted'+E],['Google Workspace and SSO account','IT','28 Nov',BL+'Drafted'+E],['SAP read access, Finance roles','IT Security','1 Dec',BL+'Drafted'+E],['Welcome email with first-week agenda','HR','26 Nov',BL+'Drafted'+E],['Buddy assigned: Priya Nair','Manager','26 Nov',OK+'Confirmed'+E]])+'<h4>30/60/90 plan</h4><ul><li><b>Day 30:</b> complete compliance training, learn the month-end reporting pack</li><li><b>Day 60:</b> own the weekly cash report, automate one manual spreadsheet</li><li><b>Day 90:</b> present one variance insight to the CFO staff meeting</li></ul><p>The 3 IT requests and 4 meeting invites are ready to send.</p>'],
+  ['What should Aisyah do in her first week?',
+  '<ul><li><b>Day 1:</b> 9:00 welcome with HR, 11:00 laptop setup, 14:00 meet manager</li><li><b>Day 2:</b> Finance team intro, buddy lunch with Priya</li><li><b>Day 3 to 4:</b> SAP and reporting walkthrough, compliance e-learning</li><li><b>Day 5:</b> first check-in with manager, agree 30-day goals</li></ul>']]},
+{id:'hr-recruit',fn:'hr',name:'Recruitment screening',blurb:'Scores CVs against must-have criteria with evidence, drafts structured interview guides and candidate emails.',i:4.3,e:3.6,
+ src:['ATS: Cloud Engineer req','Job description (Drive)','Interview question bank'],
+ steps:['Load 46 applications for the Cloud Engineer req','Mask names, photos and age details before scoring','Score each CV against 5 must-have criteria','Rank and list evidence and gaps'],
+ kpi:[['Time to shortlist','5 days to 1 day'],['Recruiter hours saved per req','about 12 h']],
+ guard:'Decision support only. Personal details masked during scoring; hiring decisions stay with people.',
+ qa:[['Shortlist the top candidates for the Cloud Engineer req against the must-have criteria.',
+  '<p>I screened <b>46 applications</b> against 5 must-have criteria: GCP experience, Terraform, Kubernetes, CI/CD and a cloud certification. Personal details were masked during scoring.</p>'+T(['Candidate','#Score','Evidence','Gap'],[['C-1042','92','6 yrs GCP, Professional Cloud Architect, GKE in production','None'],['C-1017','88','Terraform modules, Cloud Build pipelines','No certification'],['C-1031','85','Kubernetes CKA, migration to GKE','Limited Terraform'],['C-1008','79','Strong CI/CD, AWS-to-GCP move','GCP under 2 yrs'],['C-1055','76','Associate Cloud Engineer, scripting','No production K8s']])+'<p>Suggest phone screens for the top 3 this week. 9 more candidates meet 4 of 5 criteria if you want a wider pool.</p>'],
+  ['Draft interview questions for candidate C-1042.',
+  '<ol><li>Walk me through a GKE cluster you designed. How did you handle node pools and upgrades?</li><li>How do you structure Terraform state across environments?</li><li>Tell me about a production incident you led. What changed afterwards?</li><li>How would you cut cloud spend by 20% without hurting reliability?</li></ol><p class="note">Scoring rubric attached for each question, 1 to 4.</p>']]},
+{id:'hr-sentiment',fn:'hr',name:'Employee sentiment insights',blurb:'Finds themes in survey comments and exit interviews, and links them to attrition risk and actions.',i:4.0,e:4.3,
+ src:['Q3 engagement survey export','Exit interview notes','Gemini Notebook'],
+ steps:['Load 1,284 free-text survey comments','Cluster comments into themes','Score sentiment per theme and department','Draft recommended actions'],
+ kpi:[['Analysis time','3 weeks to 1 day'],['Comments read','100%, not a sample']],
+ guard:'Aggregated results only; groups under 10 people are not reported.',
+ qa:[['Summarise the main themes from the Q3 engagement survey comments.',
+  '<p>I read all <b>1,284 comments</b>. Five themes cover 88% of them.</p><h4>Share of comments by theme</h4>'+B([['Workload and staffing',31],['Career growth',22],['Manager support',15],['Hybrid work',12],['Pay and benefits',8]])+'<h4>What stands out</h4><ul><li>Workload comments are most negative in <b>Operations</b> and rose sharply since Q2.</li><li>Career growth is the top theme among staff with under 2 years of service.</li><li>Hybrid work is mostly positive. People ask to keep the current 3-day pattern.</li></ul><h4>Suggested actions</h4><ul><li>Review Operations headcount against ticket volumes</li><li>Publish career paths for the 5 largest job families</li></ul>'],
+  ['Which department has the highest attrition risk?',
+  '<p><b>Operations</b>: the most negative workload sentiment, 4 of the last 9 exits cited workload, and engagement fell 7 points since Q2. Next is Customer Service, mainly on career growth.</p>']]},
+{id:'hr-learning',fn:'hr',name:'Learning and career paths',blurb:'Builds personalised learning paths from role skills, current profile and the course catalogue.',i:3.5,e:4.4,
+ src:['Skills framework','LMS course catalogue','HRIS: employee profile'],
+ steps:['Read target role skills framework','Compare with employee\'s current skills','Pick courses from the LMS catalogue','Sequence into a 90-day plan'],
+ kpi:[['Course completion','target +25%'],['Internal moves','target +15%']],
+ guard:'Recommendations only; enrolment needs manager approval.',
+ qa:[['Build a 90-day learning path for a junior analyst moving into data engineering.',
+  T(['Weeks','Focus','Course','#Hours'],[['1 to 3','SQL and data modelling','Advanced SQL for Analytics','12'],['4 to 6','Python for pipelines','Python Data Engineering Basics','16'],['7 to 9','BigQuery and Dataflow','Google Cloud Data Engineering Path','20'],['10 to 12','Capstone','Build one pipeline for the weekly sales report','24']])+'<p>Total about <b>72 hours</b>, roughly 6 hours a week. Ends with the Google Cloud Associate Data Practitioner exam.</p>'],
+  ['Which skills is the team missing most?',
+  '<p>Across the 14-person analytics team, the biggest gaps are <b>cloud data pipelines</b> (9 people), <b>dashboard design</b> (6) and <b>Python</b> (5).</p>']]},
+{id:'fin-ap',fn:'fin',name:'Invoice processing and 3-way match',blurb:'Reads supplier invoices, matches them to PO and goods receipt, flags exceptions and queues the clean ones for approval.',i:4.9,e:3.8,
+ src:['AP inbox (Gmail)','SAP: purchase orders','SAP: goods receipts','Vendor master'],
+ steps:['Extract fields from 142 invoices in the AP inbox','Match each invoice to PO and goods receipt','Check price, quantity and duplicate rules','Group exceptions and suggest next action','Prepare clean invoices for the approval queue'],
+ kpi:[['Touchless invoices','target 80%+'],['Cost per invoice','down 50 to 70%'],['Duplicate payments caught','before payment run']],
+ guard:'Never posts payments. Clean invoices go to the existing SAP approval workflow.',
+ approve:'Send 131 matched invoices (RM 2.41m) to the SAP approval queue',
+ qa:[['Process this week\'s supplier invoices and flag the exceptions.',
+  '<p>I processed <b>142 invoices</b> worth <b>RM 2.68m</b>. <b>131 matched</b> PO and goods receipt within tolerance. <b>11 need attention</b>.</p>'+T(['Invoice','Supplier','Issue','#Amount (RM)','Next step'],[['INV-88213','Mega Office Supplies','Price 6.2% above PO',  '18,450.00','Ask buyer to confirm price'],['INV-88240','Prima Logistics','Quantity 120 vs received 100','42,300.00','Hold, request credit note'],['INV-88251','Delta Tech Sdn Bhd','No goods receipt yet','96,000.00','Chase warehouse'],['INV-88262','Mega Office Supplies','Possible duplicate of INV-88213','18,450.00','Block'],['7 others','Various','Missing PO number','91,780.00','Return to supplier']])+'<p>Possible duplicate INV-88262 is blocked from the payment run. The 131 clean invoices are ready to send to approval.</p>'],
+  ['Which suppliers cause the most exceptions?',
+  '<p>Over the last 90 days: <b>Mega Office Supplies</b> (14 exceptions, mostly price), <b>Prima Logistics</b> (9, quantity) and <b>Delta Tech</b> (6, missing receipts). Fixing the price list for Mega alone would remove about a quarter of all exceptions.</p>']]},
+{id:'fin-close',fn:'fin',name:'Month-end close and variance commentary',blurb:'Compares actuals to budget, explains the drivers in plain language and drafts the management pack.',i:4.6,e:3.7,
+ src:['BigQuery: GL actuals','Budget FY26 (Sheets)','Prior month commentary'],
+ steps:['Pull October actuals by cost centre','Compare with budget and last year','Find drivers above RM 50k or 5%','Draft commentary in management-pack style'],
+ kpi:[['Close cycle','target minus 2 days'],['Commentary drafting','1 day to 1 hour']],
+ guard:'Drafts only; controllers review before the pack is shared.',
+ qa:[['Draft the October variance commentary for opex against budget.',
+  T(['Category','#Budget (RM k)','#Actual (RM k)','#Variance'],[['Staff costs','4,200','4,330','+3.1%'],['Cloud and software','910','1,045','+14.8%'],['Travel','260','198','-23.8%'],['Professional fees','380','452','+18.9%'],['<b>Total opex</b>','<b>5,750</b>','<b>6,025</b>','<b>+4.8%</b>']])+'<h4>Commentary</h4><ul><li><b>Cloud and software</b> is RM 135k over, driven by the data platform migration running in parallel with the old environment. This should reverse after decommissioning in December.</li><li><b>Professional fees</b> are RM 72k over due to the unbudgeted tax advisory work in Q4.</li><li><b>Travel</b> is RM 62k under as two regional events moved online.</li></ul>'],
+  ['What is the full-year opex forecast?',
+  '<p>At the current run rate, full-year opex lands at about <b>RM 70.1m against RM 69.0m budget (+1.6%)</b>. Most of the gap is cloud costs, which should fall after December.</p>']]},
+{id:'fin-expense',fn:'fin',name:'Expense audit',blurb:'Checks every claim against travel and expense policy and flags anomalies, duplicates and missing receipts.',i:4.1,e:4.2,
+ src:['Expense system export','Travel and Expense Policy','Corporate card feed'],
+ steps:['Load 386 November claims','Check each line against policy limits','Match against corporate card feed','Flag anomalies with reasons'],
+ kpi:[['Claims audited','100%, not a sample'],['Audit effort','down 70%']],
+ guard:'Flags only; finance decides on rejections.',
+ qa:[['Audit November expense claims against the travel policy.',
+  '<p>I checked <b>386 claims</b> (RM 214,600). <b>372 pass</b>. <b>14 are flagged</b>.</p>'+T(['Claim','Issue','#Amount (RM)'],[['EXP-5521','Hotel above RM 450 city cap (KL)','780.00'],['EXP-5540','Same meal claimed twice','126.50'],['EXP-5562','Business class on a flight under 4 hours','2,940.00'],['EXP-5588','Receipt missing','340.00'],['10 others','Weekend claims without a trip record','3,215.40']])+'<p>Total flagged: <b>RM 7,401.90</b>.</p>'],
+  ['Who has the most flagged claims this year?',
+  '<p>Three people account for 41% of flags this year, mostly hotel caps. I suggest a reminder of the city caps rather than individual action. Names are available to Finance on request.</p>']]},
+{id:'fin-collect',fn:'fin',name:'Collections and cash forecast',blurb:'Predicts late payers, drafts dunning emails and builds a 13-week cash outlook.',i:4.3,e:3.5,
+ src:['SAP: accounts receivable','Payment history','Bank balances','CRM notes'],
+ steps:['Read open receivables and payment history','Score late-payment risk per customer','Project receipts and payments for 13 weeks','Draft reminders for high-risk accounts'],
+ kpi:[['Days sales outstanding','target minus 5 days'],['Forecast accuracy','target within 5%']],
+ guard:'Reminders are drafts until the credit controller sends them.',
+ approve:'Send 4 payment reminder emails',
+ qa:[['Which customers are most likely to pay late this month?',
+  T(['Customer','#Overdue (RM)','#Risk','Reason'],[['Harmoni Retail Bhd','312,000','82%','Paid 21 days late on average this year'],['Seri Bina Construction','188,400','74%','Disputed invoice still open'],['Kenanga Foods','96,250','61%','New finance contact, slower approvals'],['Orbit Telco','74,900','55%','Quarter-end payment pattern']])+'<p>Together that is <b>RM 671,550</b> at risk this month. Reminder emails are drafted for all four.</p>'],
+  ['What does the 13-week cash outlook look like?',
+  '<p>Cash stays above the RM 5m floor in every week. The low point is <b>RM 6.2m in week 7</b>, when the payroll and the annual licence renewals fall together.</p>']]},
+{id:'fin-contract',fn:'fin',name:'Contract terms and audit evidence',blurb:'Extracts payment terms, renewal dates and obligations from contracts and assembles audit evidence packs.',i:3.6,e:4.4,
+ src:['Contracts folder (Drive)','SharePoint: vendor agreements'],
+ steps:['Find the top 20 vendor contracts by spend','Extract payment terms and renewal clauses','Flag auto-renewals in the next 90 days','Build the summary table'],
+ kpi:[['Contract review time','hours to minutes'],['Missed auto-renewals','target zero']],
+ guard:'Read-only. Each figure links back to the clause it came from.',
+ qa:[['Extract payment terms and renewal dates from our top vendor contracts.',
+  T(['Vendor','Terms','Renewal','Notice'],[['CloudOne Hosting','Net 30','1 Mar 2027, auto','90 days'],['SecureGuard Services','Net 45','31 Mar 2027','60 days'],['Prima Logistics','Net 60','Rolling monthly','30 days'],['DataSoft Licences','Annual in advance','15 Feb 2027, auto','60 days']])+'<p>'+W+'Action'+E+' CloudOne auto-renews on 1 March and its 90-day notice window <b>closes on 1 December</b>. DataSoft notice closes on 17 December. Decide on both before then or they renew for another year.</p>'],
+  ['Which contracts have late-payment penalties?',
+  '<p>6 of the 20 contracts have penalties. The highest is Prima Logistics at <b>1.5% a month</b> on overdue amounts (clause 8.2).</p>']]},
+{id:'fin-fpa',fn:'fin',name:'FP&A research and benchmarking',blurb:'Uses Deep Research and Gemini Notebook to benchmark margins, costs and growth against peers.',i:3.4,e:4.7,
+ src:['Deep Research (web)','Peer annual reports','Gemini Notebook'],
+ steps:['Collect latest annual reports for 3 regional peers','Extract margin and cost ratios','Compare with our FY25 figures','Summarise with citations'],
+ kpi:[['Benchmark pack','2 weeks to 1 day']],
+ guard:'Every figure is cited to its source report.',
+ qa:[['Benchmark our gross margin against regional peers.',
+  T(['Company','#Gross margin','#Opex / revenue'],[['Our company','38.2%','24.1%'],['Peer A','41.5%','26.8%'],['Peer B','36.9%','22.4%'],['Peer C','39.8%','25.0%'],['Peer median','39.8%','25.0%']])+'<p>We are <b>1.6 points below</b> the peer median on gross margin but run leaner on opex. The gap is mostly in procurement costs, where Peer A reports a central sourcing programme.</p><p class="note">Peers anonymised; synthetic data.</p>'],
+  ['Turn this into three slides for the CFO.',
+  '<ol><li>Where we stand: margin and opex against the peer range</li><li>Why: procurement cost gap and pricing mix</li><li>What to do: central sourcing pilot, target +1 point margin in FY27</li></ol>']]},
+{id:'it-triage',fn:'it',name:'Ticket triage and resolution',blurb:'Classifies and routes tickets, suggests fixes from past resolutions and resolves common requests.',i:4.7,e:4.2,
+ src:['ServiceNow incidents','Knowledge base','Past resolutions'],
+ steps:['Read 58 open P3 tickets','Classify by category and urgency','Match each to past resolutions','Route or draft resolution'],
+ kpi:[['First-contact resolution','target +30%'],['Mean time to resolve','target minus 40%']],
+ guard:'Can reset passwords and grant standard software only; everything else is routed to people.',
+ approve:'Apply 21 suggested resolutions and route 37 tickets',
+ qa:[['Triage the open P3 tickets in the queue.',
+  '<p><b>58 open P3 tickets</b>. 21 can be resolved now from known fixes. 37 are routed.</p>'+T(['Category','#Tickets','#Auto-fix','Route to'],[['Password and MFA','14','14','Self-service'],['VPN connection','11','5','Network team'],['Laptop performance','9','2','Desktop support'],['Software requests','12','0','Asset approval'],['Other','12','0','Service desk L2']])+'<p>Warning: 6 VPN tickets came from the Penang office in the last hour. That pattern suggests an outage, so I suggest opening a P2 incident.</p>'],
+  ['Is there a wider outage?',
+  '<p>Likely yes. 6 VPN failures from Penang in 50 minutes, all on the same gateway. Normal volume is 1 a day. I drafted a P2 incident for the network team.</p>']]},
+{id:'it-kb',fn:'it',name:'Knowledge article generation',blurb:'Turns resolved tickets into clear knowledge articles and spots gaps in the knowledge base.',i:3.4,e:4.8,
+ src:['ServiceNow resolved tickets','Knowledge base'],
+ steps:['Find 63 resolved VPN tickets from last month','Group by root cause','Write step-by-step fix','Check for duplicates in the knowledge base'],
+ kpi:[['KB coverage','target +40%'],['Repeat tickets','target minus 25%']],
+ guard:'Articles are published only after IT review.',
+ qa:[['Turn last month\'s resolved VPN tickets into a knowledge article.',
+  '<h4>VPN fails to connect after password change</h4><p>Applies to Windows and Mac laptops using the corporate VPN client.</p><ol><li>Sign out of the VPN client completely</li><li>Open the client settings and clear saved credentials</li><li>Sign in again with your new password and approve the MFA prompt</li><li>If it still fails, restart the laptop and try once more</li></ol><p>Resolved 41 of the 63 tickets last month. If none of the steps work, raise a ticket with category Network.</p>'],
+  ['What topics is the knowledge base missing?',
+  '<p>Top gaps by ticket volume with no article: <b>printer setup on Mac</b> (38 tickets), <b>shared mailbox access</b> (27) and <b>Teams to Meet calendar sync</b> (19).</p>']]},
+{id:'sales-brief',fn:'sales',name:'Account briefing',blurb:'Prepares meeting briefs from CRM, email history, news and open opportunities.',i:4.2,e:4.8,
+ src:['Salesforce','Gmail history','Deep Research (news)','Proposal folder'],
+ steps:['Read account and opportunities in Salesforce','Summarise last 90 days of email','Search recent news on the account','Write one-page brief with talking points'],
+ kpi:[['Prep time per meeting','45 min to 5 min']],
+ guard:'Read-only.',
+ qa:[['Prepare me for tomorrow\'s meeting with Lumina Logistics.',
+  '<h4>Lumina Logistics Sdn Bhd</h4><ul><li><b>Relationship:</b> customer since 2023, RM 1.2m a year, managed services</li><li><b>Open deal:</b> Gemini Enterprise pilot, RM 380k, stage: proposal, close date 15 December</li><li><b>Last contact:</b> CIO asked for a security and data residency answer on 18 November, still open</li><li><b>News:</b> opened a new regional hub in Johor this month</li></ul><h4>Talking points</h4><ol><li>Answer the data residency question first</li><li>Tie the pilot to the Johor hub: driver HR questions and dispatch documents</li><li>Agree pilot success measures and a decision date</li></ol>'],
+  ['Who are the decision makers?',
+  '<p>CIO Farid Hassan (sponsor), Head of Security Grace Lim (needs the residency answer) and CFO Ramesh Kumar (signs above RM 250k).</p>']]},
+{id:'sales-rfp',fn:'sales',name:'RFP response drafting',blurb:'Drafts RFP answers from the approved answer library and past bids, and flags questions needing an expert.',i:4.5,e:3.7,
+ src:['Answer library (Drive)','Past bids','Security certifications'],
+ steps:['Read 42 questions in the security section','Match each to approved answers','Draft answers and cite sources','Flag gaps for subject matter experts'],
+ kpi:[['First draft time','2 weeks to 2 days'],['Answer reuse','target 70%']],
+ guard:'Only approved library answers are reused word for word.',
+ qa:[['Draft answers for the security section of the Kembara Bank RFP.',
+  '<p><b>42 questions</b> in the security section: '+OK+'31 drafted from library'+E+' '+BL+'8 adapted'+E+' '+W+'3 need an expert'+E+'</p>'+T(['Q','Topic','Status'],[['4.1','Encryption at rest and in transit','Drafted'],['4.7','Data residency in Malaysia','Adapted from 2026 bank bid'],['4.12','Penetration test frequency','Drafted'],['4.19','Bank-specific outsourcing rules','Needs compliance'],['4.33','AI model training on customer data','Needs product']])+'<p>The full draft is in the bid folder, with a source link on every answer.</p>'],
+  ['Summarise our win themes.',
+  '<ol><li>Local delivery team and Malaysian data residency</li><li>Proven bank references in the region</li><li>Governed AI: enterprise controls and no training on customer data</li></ol>']]},
+{id:'mkt-campaign',fn:'sales',name:'Campaign content',blurb:'Writes on-brand campaign emails, social posts and landing copy, with variants for testing.',i:3.3,e:4.9,
+ src:['Brand guidelines','Past campaign results','Product messaging'],
+ steps:['Read brand guide and webinar brief','Check best performing past subject lines','Draft 3-email sequence','Create subject line variants for A/B test'],
+ kpi:[['Content production','days to hours']],
+ guard:'Marketing approves before anything is scheduled.',
+ qa:[['Create a 3-email nurture sequence for our Gemini Enterprise webinar.',
+  T(['Email','Send','Subject','Goal'],[['1','7 days before','Your agents, your data: see it live','Register'],['2','1 day before','Tomorrow: 3 agents running real HR and finance work','Attend'],['3','2 days after','The recording, and a 30-minute use case workshop','Book workshop']])+'<p>Each email is under 120 words with one call to action. I made 2 subject line variants for each to A/B test.</p>'],
+  ['Write the LinkedIn post for it.',
+  '<p>What would your HR and finance teams do with an agent that answers policy questions, matches invoices and drafts the month-end commentary? Join NTT DATA and Google Cloud for a live walkthrough on 10 December. Register via the link in comments.</p>']]},
+{id:'proc-vendor',fn:'proc',name:'Supplier quote comparison',blurb:'Normalises supplier quotes, compares total cost, terms and risk, and recommends a winner.',i:4.0,e:4.5,
+ src:['Quotes (Gmail attachments)','Vendor master','Procurement policy'],
+ steps:['Extract line items from 3 quotes','Normalise specs and delivery terms','Compare total cost of ownership','Recommend with reasons'],
+ kpi:[['Evaluation time','3 days to 1 hour'],['Savings found','target 3 to 5%']],
+ guard:'Recommendation only; award follows the procurement policy.',
+ qa:[['Compare the three quotes for 200 laptops.',
+  T(['Supplier','#Unit price (RM)','#3-yr total (RM)','Warranty','Delivery'],[['TechMart','4,150','872,000','3 yr onsite','3 weeks'],['Nexus IT','3,980','868,000','1 yr, +2 yr RM 360','5 weeks'],['Delta Tech','4,320','864,000','3 yr onsite + accidental','2 weeks']])+'<p><b>Recommend Delta Tech.</b> Its unit price is highest, but it has the lowest 3-year cost once warranty and support are included, plus the fastest delivery. Nexus is cheapest per unit but adds RM 72,000 for the warranty extension.</p>'],
+  ['Draft a negotiation email to Delta Tech.',
+  '<p>Hi Kumar, thank you for your quote. You are our preferred supplier for this order. To close this week we need a unit price of RM 4,200. Can you confirm by Friday?</p>']]},
+{id:'proc-risk',fn:'proc',name:'Supplier risk monitoring',blurb:'Watches news, financial signals and delivery performance for key suppliers and raises early warnings.',i:3.9,e:3.6,
+ src:['Deep Research (news)','Delivery performance (BigQuery)','Vendor master'],
+ steps:['Scan news for the top 10 suppliers','Check on-time delivery trends','Score risk and changes since last week','Suggest mitigations'],
+ kpi:[['Disruptions spotted early','target 2+ weeks warning']],
+ guard:'Read-only alerts.',
+ qa:[['Any risk signals on our top 10 suppliers this week?',
+  T(['Supplier','Signal','Risk'],[['Prima Logistics','On-time delivery fell from 96% to 84% in 6 weeks',W+'High'+E],['Mega Office Supplies','Price increase notice from January',BL+'Medium'+E],['8 others','No change',OK+'Low'+E]])+'<p>For Prima, I suggest a call with their account manager and getting a backup quote from a second logistics provider.</p>'],
+  ['Who is our backup for Prima Logistics?',
+  '<p>Two approved alternatives in the vendor master: <b>Swift Haul</b> (used in 2025, 95% on time) and <b>Borneo Freight</b> (East Malaysia only).</p>']]}
+];
+
+const fnOf=id=>FN.find(f=>f.id===id),ucOf=id=>UC.find(u=>u.id===id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const st={runs:[],star:new Set(['hr-helpdesk','fin-ap','it-triage']),chats:{},last:{},busy:false,howBusy:false};
+const ss={get:k=>{try{return sessionStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{sessionStorage.setItem(k,v)}catch(e){}},del:k=>{try{sessionStorage.removeItem(k)}catch(e){}}};
+const $=s=>document.querySelector(s);
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const qw=u=>u.i>=4.2&&u.e>=4.2;
+const phase=u=>u.i+u.e>=8.8?'Phase 1, weeks 1 to 6':u.i+u.e>=8?'Phase 2, weeks 7 to 12':'Phase 3, after week 12';
+const sleep=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
+
+/* glass sheen follows the pointer */
+document.addEventListener('pointermove',e=>{const h=e.target.closest&&e.target.closest('.hov');if(!h)return;const r=h.getBoundingClientRect();h.style.setProperty('--mx',(e.clientX-r.left)+'px');h.style.setProperty('--my',(e.clientY-r.top)+'px')},{passive:true});
+
+/* behind-the-scenes model */
+const STAGES=[
+ {t:'Request',d:'Employee asks in the Gemini Enterprise app or Chat.',tech:['Gemini Enterprise app','Google Chat','SSO'],long:'The employee asks in the Gemini Enterprise app, in Google Chat or from a company portal. The request carries their signed-in identity, so everything that follows runs as that person.'},
+ {t:'Identity and access',d:'Checks who is asking and what they may see.',tech:['Workforce identity','Source permissions'],long:'Gemini Enterprise checks who is asking. Connectors keep each source system\'s own permissions, so the agent can only read documents and records this person could open themselves.'},
+ {t:'Input screening',d:'Screens the prompt before the model sees it.',tech:['Model Armor','Sensitive Data Protection'],long:'The prompt is screened for prompt injection, jailbreak attempts and sensitive data before it reaches the model. Anything risky is blocked or masked.'},
+ {t:'Plan',d:'Gemini decides the steps and tools.',tech:['Gemini model','Agent Designer','ADK'],long:'The Gemini model reads the agent\'s instructions, the question and the list of tools it may use, then plans the steps. The agent itself is built in Agent Designer (no code) or with the Agent Development Kit.'},
+ {t:'Ground and act',d:'Searches connected data and calls tools.',tech:['Connectors','Enterprise search','API and MCP tools'],long:'Each step calls a tool: enterprise search over connected data to ground the answer, or an API call into SAP, ServiceNow or the HR system. Every result comes back with a link to its source.'},
+ {t:'Check and approve',d:'Screens output and holds actions for a person.',tech:['Output screening','Guardrails','Human approval'],long:'The draft answer is screened and checked against the agent\'s guardrails. Any action that would change a system waits until a person approves it.'},
+ {t:'Respond and log',d:'Answers with citations and writes the audit trail.',tech:['Citations','Cloud Logging','Agent observability'],long:'The answer goes back with citations. Every step, tool call, approval and timing is written to the audit trail so admins can see what each agent did.'}
+];
+const toolOf=s=>/Deep Research/.test(s)?'deep_research':/Notebook/.test(s)?'notebook.query':/SAP|ServiceNow|Salesforce|HRIS|BigQuery|CRM|Order|ATS|LMS|Expense system|Delivery|Monitoring|Jira|Bank|Payment|Vendor master|card feed|Calendar|Survey|survey/.test(s)?'api.read':'search.retrieve';
+const events=(u,q)=>{let h=7;for(const c of u.id+q.length)h=(h*31+c.charCodeAt(0))%2147483646;h=h||11;const r=()=>(h=h*16807%2147483647)/2147483647;
+ let t=0;const out=[],add=(s,e,m,k)=>{t+=0.05+r()*0.35;out.push({s,t,e,m,k:k||''})};
+ add(0,'request.received','channel=Gemini Enterprise app user=nttdata');add(0,'request.prompt','"'+q+'"');
+ add(1,'identity.verified','SSO session valid, groups: '+fnOf(u.fn).short+' team, All staff');u.src.forEach(s=>add(1,'acl.check',s+': allowed'));
+ add(2,'screen.input','prompt injection: none found','gd');add(2,'screen.input','sensitive data in prompt: none, PASS','gd');
+ add(3,'model.plan','Gemini planned '+u.steps.length+' steps using '+new Set(u.src.map(toolOf)).size+' tools');u.steps.forEach((s,i)=>add(3,'plan.step',(i+1)+'. '+s));
+ let k=0;u.src.forEach(s=>{const tl=toolOf(s),n=Math.round(3+r()*(tl==='api.read'?140:24));k+=Math.min(n,4);t+=0.2+r()*0.5;add(4,'tool.call',tl+'(source="'+s+'")','tl');add(4,'tool.result',n+' items, top relevance '+(0.82+r()*0.15).toFixed(2),'tl')});
+ add(4,'grounding.attach',k+' passages attached with source links','tl');
+ add(5,'screen.output','grounded: yes, unsupported claims: 0','gd');add(5,'guardrail',u.guard,'gd');
+ u.approve?add(5,'action.pending','approval required: '+u.approve,'wn'):add(5,'action.none','read or draft only, no approval needed','gd');
+ t+=0.8+r()*1.2;const lat=(t+0.4).toFixed(1),tin=Math.round(2400+r()*4200),tout=Math.round(380+r()*700);
+ add(6,'response.sent','answer with '+Math.min(k,u.src.length+2)+' citations');add(6,'audit.log','trace id tr-'+Math.floor(r()*1e8).toString(16));add(6,'metrics','latency '+lat+' s, tool calls '+u.src.length+', tokens in '+tin+' out '+tout);
+ out.meta={lat,tools:u.src.length,cites:Math.min(k,u.src.length+2),tin,tout};return out};
+const lnHtml=e=>{const c=e.k==='tl'?' tl':e.k==='gd'?' gd':e.k==='wn'?' wn':'';return '<div class="ln"><span class="ts">'+e.t.toFixed(2)+'s</span><span class="ev'+c+'">'+esc(e.e)+'</span><span>'+esc(e.m)+'</span></div>'};
+const ctxText=(u,q)=>'<b>SYSTEM</b>  You are the '+esc(u.name)+' agent. Answer only from the connected sources and cite every fact. '+esc(u.guard)+'\n\n<b>TOOLS</b>   '+[...new Set(u.src.map(toolOf))].join(', ')+(u.approve?', request_approval':'')+'\n\n<b>USER</b>    '+esc(q)+'\n\n<b>CONTEXT</b> '+u.src.map((s,i)=>'['+(i+1)+'] '+esc(s)+': passages retrieved for "'+esc(u.steps[Math.min(i,u.steps.length-1)])+'"').join('\n        ')+'\n\n<b>PLAN</b>    '+u.steps.map((s,i)=>(i+1)+'. '+esc(s)).join('\n        ');
+
+/* login network */
+const net=$('#net');
+const HEX=[['hr','HR'],['fin','Finance'],['it','IT Services'],['sales','Sales'],['proc','Procurement']];
+const hexPts=(x,y,r)=>[0,1,2,3,4,5].map(k=>{const a=Math.PI/180*(60*k-90);return (x+r*Math.cos(a)).toFixed(1)+','+(y+r*Math.sin(a)).toFixed(1)}).join(' ');
+const drawNet=()=>{const W=net.clientWidth,H=net.clientHeight;if(!W)return;const m=Math.min(W,H),cx=W/2,cy=H/2+m*0.02,R=m*0.33,rf=Math.max(34,Math.min(96,m*0.135)),rc=Math.max(40,Math.min(112,m*0.16)),fs=rf>62?15:rf>48?12.5:11;
+ let s='<defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5fd0ff"/><stop offset=".55" stop-color="#0072bc"/><stop offset="1" stop-color="#14139a"/></linearGradient><linearGradient id="hf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".16"/><stop offset="1" stop-color="#ffffff" stop-opacity=".03"/></linearGradient></defs>';
+ s+='<polygon class="hx-ring" points="'+hexPts(cx,cy,R+rf*1.25)+'"/>';
+ HEX.forEach(([id,label],i)=>{const f=fnOf(id),a=Math.PI/180*(-90+i*72),x=cx+R*Math.cos(a),y=cy+R*Math.sin(a),dx=Math.cos(a),dy=Math.sin(a);
+  const x1=cx+dx*rc*0.95,y1=cy+dy*rc*0.95,x2=x-dx*rf*0.92,y2=y-dy*rf*0.92,d=' style="animation-delay:'+(i*1.2).toFixed(1)+'s;--c:'+f.c+'"';
+  s+='<line class="hx-link" x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'"/>';
+  s+='<line class="hx-pulse" pathLength="100" x1="'+x2+'" y1="'+y2+'" x2="'+x1+'" y2="'+y1+'"'+d+'/>';
+  s+='<polygon class="hx-glow" points="'+hexPts(x,y,rf)+'"'+d+'/>';
+  s+='<polygon class="hx-box" points="'+hexPts(x,y,rf)+'"/>';
+  s+='<polygon class="hx-trace" pathLength="100" points="'+hexPts(x,y,rf)+'"'+d+'/>';
+  s+='<circle cx="'+x+'" cy="'+(y-rf*0.38)+'" r="'+(rf*0.09)+'" fill="'+f.c+'"/>';
+  s+='<text class="hx-t" x="'+x+'" y="'+(y+fs*0.35)+'" style="font-size:'+fs+'px">'+label+'</text>';
+  if(rf>=40)s+='<text class="hx-s" x="'+x+'" y="'+(y+fs*1.6)+'" style="font-size:'+Math.max(10,fs-2.5)+'px">'+UC.filter(u=>u.fn===id).length+' agents</text>'});
+ s+='<polygon class="hx-core-glow" points="'+hexPts(cx,cy,rc*1.08)+'"/><polygon points="'+hexPts(cx,cy,rc)+'" fill="url(#cg)" stroke="rgba(255,255,255,.75)" stroke-width="1.5" stroke-linejoin="round"/>';
+ s+='<polygon points="'+hexPts(cx,cy,rc*0.82)+'" fill="none" stroke="rgba(255,255,255,.25)" stroke-linejoin="round"/>';
+ s+='<text class="hx-t" x="'+cx+'" y="'+(cy-2)+'" style="font-size:'+(fs+1)+'px">Google</text><text class="hx-t" x="'+cx+'" y="'+(cy+fs+3)+'" style="font-size:'+(fs+1)+'px">Gemini</text>';
+ net.innerHTML=s};
+const roNet=new ResizeObserver(drawNet);roNet.observe(net);
+
+/* auth */
+const showApp=()=>{document.body.classList.remove('night');document.body.classList.add('pro');$('#login').hidden=true;$('#app').hidden=false;route()};
+const showLogin=()=>{document.body.classList.add('night');document.body.classList.remove('pro');$('#app').hidden=true;$('#login').hidden=false;$('#u').focus()};
+$('#pt').addEventListener('click',()=>{const p=$('#p'),v=p.type==='password';p.type=v?'text':'password';$('#pt').textContent=v?'Hide':'Show';$('#pt').setAttribute('aria-label',v?'Hide password':'Show password')});
+$('#lf').addEventListener('submit',e=>{e.preventDefault();const u=$('#u').value.trim(),p=$('#p').value;
+ if(u==='Nttdata'&&p==='Nttdata@123!@#'){$('#lerr').textContent='';ss.set('ntt-auth','1');$('#p').value='';showApp()}
+ else{$('#lerr').textContent=!u||!p?'Enter your username and password.':'Username or password is incorrect.';$('#p').select()}});
+$('#out').addEventListener('click',()=>{ss.del('ntt-auth');location.hash='';showLogin()});
+
+/* sidebar */
+const side=$('#side');
+side.innerHTML='<button class="nav" data-go="home" title="Overview"><span class="dot" style="background:#00b4e6"></span><span class="lb">Overview</span><span class="sh">Home</span></button>'+'<button class="nav" data-go="how" title="Behind the scenes"><span class="dot" style="background:linear-gradient(135deg,#9fe3fb,#0072bc)"></span><span class="lb">Behind the scenes</span><span class="sh">Inside</span></button>'+'<small>Functions</small>'+FN.map(f=>'<button class="nav" data-go="'+f.id+'" title="'+f.name+'"><span class="dot" style="background:'+f.c+'"></span><span class="lb">'+f.name+'</span><span class="sh">'+({proc:'Procure',eng:'Engineer'}[f.id]||f.short)+'</span><span class="ct">'+UC.filter(u=>u.fn===f.id).length+'</span></button>').join('')+'<small>Manage</small>'+'<button class="nav" data-go="pilot" title="Pilot shortlist"><span class="dot" style="background:#9fb0e8"></span><span class="lb">Pilot shortlist</span><span class="sh">Pilot</span><span class="ct" id="sc"></span></button>'+'<button class="nav" data-go="governance" title="Governance"><span class="dot" style="background:#8d95c9"></span><span class="lb">Governance</span><span class="sh">Govern</span></button>';
+{const tn=document.querySelector('.topnav');const roNav=new ResizeObserver(()=>{if(tn.offsetHeight)document.documentElement.style.setProperty('--navh',tn.offsetHeight+'px')});roNav.observe(tn)}
+$('#ham').addEventListener('click',()=>{st.rail=!document.body.classList.contains('rail');document.body.classList.toggle('rail',st.rail)});
+side.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)location.hash=b.dataset.go});
+
+/* search */
+const q=$('#q'),res=$('#res');
+q.addEventListener('input',()=>{const t=q.value.trim().toLowerCase();if(!t){res.style.display='none';return}
+ const m=UC.filter(u=>(u.name+' '+u.blurb+' '+fnOf(u.fn).name+' '+u.src.join(' ')).toLowerCase().includes(t)).slice(0,8);
+ res.innerHTML=m.length?m.map(u=>'<button data-uc="'+u.id+'"><b>'+u.name+'</b><br><span class="fine">'+fnOf(u.fn).name+'</span></button>').join(''):'<div class="fine" style="padding:12px 14px">No use cases match.</div>';res.style.display='block'});
+res.addEventListener('click',e=>{const b=e.target.closest('[data-uc]');if(b){location.hash='uc-'+b.dataset.uc;q.value='';res.style.display='none'}});
+document.addEventListener('click',e=>{if(!e.target.closest('.srch'))res.style.display='none'});
+
+/* views */
+const V=$('#view');
+const meter=(l,v,c)=>'<div class="meter" style="--c:'+c+'"><span>'+l+'</span><i style="--w:'+(v/5*100)+'%"></i><b>'+v.toFixed(1)+'</b></div>';
+const ucCard=u=>{const f=fnOf(u.fn);return '<div class="fcard glass hov" style="--c:'+f.c+'"><div class="hd"><i></i><h3>'+u.name+'</h3></div><p>'+u.blurb+'</p>'+meter('Impact',u.i,f.c)+meter('Ease',u.e,f.c)+'<div class="chips">'+u.src.slice(0,3).map(s=>'<span class="chip">'+s+'</span>').join('')+'</div><div class="ucfoot"><button class="btn" data-open="'+u.id+'">Open agent</button><button class="ghost" data-star="'+u.id+'" aria-pressed="'+st.star.has(u.id)+'" aria-label="Add to pilot shortlist">'+(st.star.has(u.id)?'Shortlisted':'Shortlist')+'</button></div></div>'};
+const home=()=>{const quick=UC.filter(qw),top=[...UC].sort((a,b)=>(b.i+b.e)-(a.i+a.e)).slice(0,7);
+ V.innerHTML='<div class="head"><div><h1>'+UC.length+' agent use cases across '+FN.length+' functions</h1><p class="muted">'+quick.length+' of them are quick wins: high impact and easy to stand up on Gemini Enterprise with existing connectors. Click any dot to open its agent, or see <a href="#how">what happens behind the scenes</a>.</p></div></div>'+
+ '<div class="figs"><div class="fg glass hov"><b>'+UC.length+'</b><span>Use cases</span></div><div class="fg glass hov"><b>'+quick.length+'</b><span>Quick wins</span></div><div class="fg glass hov"><b>'+new Set(UC.flatMap(u=>u.src)).size+'</b><span>Data sources used</span></div><div class="fg glass hov"><b>'+st.runs.length+'</b><span>Agent runs this session</span></div><div class="fg glass hov"><b>'+st.star.size+'</b><span>On pilot shortlist</span></div></div>'+
+ '<div class="two"><div class="card glass"><h2>Impact against ease of implementation</h2><div class="fig mx"><svg id="mxs" role="img" aria-label="Scatter of use cases by impact and ease"></svg></div><div class="legend">'+FN.map(f=>'<span><i style="background:'+f.c+'"></i>'+f.short+'</span>').join('')+'</div></div>'+
+ '<div class="card glass"><h2>Start here</h2><p class="fine" style="margin-top:6px">Ranked by impact plus ease</p><ol class="rank">'+top.map(u=>'<li><a href="#uc-'+u.id+'">'+u.name+'</a><em>'+fnOf(u.fn).name+'</em><b>'+(u.i+u.e).toFixed(1)+'</b></li>').join('')+'</ol></div></div>'+
+ '<h2 style="margin-bottom:14px">Functions</h2><div class="grid">'+FN.map(f=>{const us=UC.filter(u=>u.fn===f.id);return '<button class="fcard glass hov" style="--c:'+f.c+'" data-go="'+f.id+'"><div class="hd"><i></i><h3>'+f.name+'</h3></div><p>'+f.blurb+'</p><div class="chips">'+us.map(u=>'<span class="chip">'+u.name+'</span>').join('')+'</div></button>'}).join('')+'</div>'+
+ '<p class="note" style="margin-top:22px">Impact and ease scores are NTT DATA pre-sales estimates for planning, not measured results. All records and figures are synthetic data.</p>';
+ const s=$('#mxs');const draw=()=>{const W=s.clientWidth,H=s.clientHeight;if(!W)return;const m={l:46,r:16,t:16,b:40},x=v=>m.l+(v-3)/(5-3)*(W-m.l-m.r),y=v=>H-m.b-(v-3)/(5-3)*(H-m.t-m.b);
+  let g='<rect x="'+x(4.2)+'" y="'+m.t+'" width="'+(x(5)-x(4.2))+'" height="'+(y(4.2)-m.t)+'" rx="12" fill="#00b4e6" opacity=".12"/>';
+  [3,3.5,4,4.5,5].forEach(v=>{g+='<line x1="'+x(v)+'" x2="'+x(v)+'" y1="'+m.t+'" y2="'+(H-m.b)+'" stroke="var(--line)"/><line y1="'+y(v)+'" y2="'+y(v)+'" x1="'+m.l+'" x2="'+(W-m.r)+'" stroke="var(--line)"/>';if(W>=520||v%1===0){g+='<text x="'+x(v)+'" y="'+(H-m.b+18)+'" text-anchor="middle">'+v+'</text><text x="'+(m.l-8)+'" y="'+(y(v)+4)+'" text-anchor="end">'+v+'</text>'}});
+  g+='<text x="'+((m.l+W-m.r)/2)+'" y="'+(H-6)+'" text-anchor="middle">Ease of implementation</text><text transform="translate(13,'+((m.t+H-m.b)/2)+') rotate(-90)" text-anchor="middle">Impact</text>';
+  g+='<text class="q" x="'+(W-m.r-10)+'" y="'+(m.t+22)+'" text-anchor="end">Quick wins</text><text class="q" x="'+(m.l+10)+'" y="'+(m.t+22)+'">Strategic bets</text>';
+  UC.forEach(u=>{const f=fnOf(u.fn);g+='<circle data-uc="'+u.id+'" cx="'+x(u.e)+'" cy="'+y(u.i)+'" r="'+(W<520?7:9)+'" fill="'+f.c+'" tabindex="0"><title>'+esc(u.name)+' (impact '+u.i+', ease '+u.e+')</title></circle>'});
+  s.innerHTML=g};
+ const roMx=new ResizeObserver(draw);roMx.observe(s);
+ s.addEventListener('click',e=>{const c=e.target.closest('[data-uc]');if(c)location.hash='uc-'+c.dataset.uc});
+ s.addEventListener('keydown',e=>{const c=e.target.closest('[data-uc]');if(c&&(e.key==='Enter'||e.key===' ')){e.preventDefault();location.hash='uc-'+c.dataset.uc}})};
+const fnView=f=>{const us=UC.filter(u=>u.fn===f.id);V.innerHTML='<div class="crumb"><a href="#home">Overview</a> / '+f.name+'</div><div class="head"><div><h1>'+f.name+'</h1><p class="muted">'+us.length+' agent use cases. '+f.blurb+'</p></div></div><div class="grid">'+us.map(ucCard).join('')+'</div>'};
+const flowNodes=(u,evs)=>{const g=s=>evs.filter(e=>e.s===s),T=evs[evs.length-1].t+0.1,s3=g(3)[0].t-0.05,s5=g(5)[0].t-0.05,s6=g(6)[0].t-0.05,n=u.steps.length,w=(s5-s3)/n;
+ const N=[{ic:'user',t:'Request received',m:'<span class="tool">identity.check</span>Signed in as nttdata, '+esc(fnOf(u.fn).short)+' team',a:0,b:s3}];
+ const wd=x=>x.toLowerCase().split(/[^a-z0-9]+/).filter(w=>w.length>2&&!/^(the|and|for|from|each|with|our|this)$/.test(w));
+ u.steps.forEach((s,i)=>{let src=null,bs=0;u.src.forEach(x=>{const k=wd(x.replace(/\(.*\)/,'')).filter(w=>wd(s+(/book|meeting/i.test(s)?' calendar':'')+(/email/i.test(s)?' gmail':'')+(/news/i.test(s)?' deep research':'')).some(v=>v.slice(0,5)===w.slice(0,5))).length;if(k>bs){bs=k;src=x}});if(/^(compose|draft|write|apply|cluster|score|rank|group|classify|summari|suggest|recommend|build|sequence|rate|turn|book|prepare|route|find drivers)/i.test(s)&&!/ServiceNow|SAP|HRIS|Salesforce|Jira|Calendar|book|meeting|email|news/i.test(s))src=null;if(!src&&/^(read|load|pull|collect|extract|search|scan|look|gather)/i.test(s))src=u.src[0];N.push({ic:src?(/Calendar/.test(src)?'cal':/Gmail|inbox|email/i.test(src)?'mail':{'api.read':'db','search.retrieve':'doc','deep_research':'globe','notebook.query':'book'}[toolOf(src)]):'spark',t:s,m:src?'<span class="tool">'+toolOf(src)+'</span>'+esc(src):'<span class="tool model">gemini.reason</span>Gemini model',a:s3+i*w,b:s3+(i+1)*w})});
+ N.push({ic:'shield',t:'Guardrail check',m:'<span class="tool gd">screen.output</span>'+(u.approve?'Action held for your approval':'Read or draft only, no approval needed'),a:s5,b:s6});
+ N.push({ic:'chat',t:'Answer with citations',m:'<span class="tool model">response</span>'+evs.meta.cites+' sources cited',a:s6,b:T});return {N,T}};
+const spansOf=evs=>{const g=s=>evs.filter(e=>e.s===s),S=[],grp=(s,l,k)=>{const x=g(s);S.push({l,k,a:Math.max(0,x[0].t-0.12),b:x[x.length-1].t})};
+ grp(0,'Request','req');grp(1,'Identity and access','req');grp(2,'Input screening','guard');grp(3,'Gemini planning','model');
+ evs.forEach((e,i)=>{if(e.e==='tool.call')S.push({l:(e.m.match(/source="(.*)"/)||['',''])[1],k:'tool',a:evs[i-1].t,b:evs[i+1].t,tl:e.m.split('(')[0],sub:1})});
+ grp(5,'Output checks','guard');grp(6,'Response','model');return S};
+const fmtD=d=>d<1?Math.round(d*1000)+' ms':d.toFixed(2)+' s';
+const viz=(u,evs)=>{const {N,T}=flowNodes(u,evs),S=spansOf(evs),tok=evs.meta.tin+evs.meta.tout,plan=S[3],resp=S[S.length-1];
+ $('#flw').innerHTML='<div class="ptrack" id="ptr" tabindex="0" aria-label="Agent plan steps"><div class="prow" id="fl">'+N.map((n,i)=>'<div class="pt"><div class="pt-top"><span class="pic"><svg class="ico"><use href="#i-'+n.ic+'"/></svg></span><div class="ps"><span class="sn2">Step '+(i+1)+'</span><span class="stt">Waiting</span></div><span class="tm"></span></div><h4>'+esc(n.t)+'</h4><div class="mt">'+n.m+'</div><div class="pb"><i></i></div></div>').join('')+'</div></div>';
+ $('#wfw').innerHTML='<div class="wax"><span></span><div><span>0 s</span><span>'+(T/4).toFixed(1)+' s</span><span>'+(T/2).toFixed(1)+' s</span><span>'+(T*3/4).toFixed(1)+' s</span><span>'+T.toFixed(1)+' s</span></div><span></span></div><div class="wf" id="wf"><i class="now" id="now"></i>'+S.map(s=>'<div class="wr k-'+s.k+(s.sub?' sub':'')+'" title="'+esc((s.tl?s.tl+': ':'')+s.l)+'"><span class="wl">'+(s.tl?'<em>'+esc(s.tl)+'</em>':'')+esc(s.l)+'</span><span class="wt"><i class="wb" style="--a:'+(s.a/T*100).toFixed(2)+'%"></i></span><span class="wd"></span></div>').join('')+'</div>';
+ $('#feed').innerHTML='<p class="fine">Events appear here as the agent works.</p>';$('#mt').innerHTML='';
+ const ptr=$('#ptr'),nodes=[...document.querySelectorAll('#fl .pt')],rows=[...document.querySelectorAll('#wf .wr')],now=$('#now'),lv=[0,1,2,3].map(i=>$('#lv'+i+' b')),feed=$('#feed'),mt=$('#mt'),pc=$('#pcnt');let shown=0;
+ const up=sim=>{let done=0;
+  N.forEach((n,i)=>{const el=nodes[i],s=sim>=n.b?'done':sim>=n.a?'on':'';if(s==='done')done++;
+   if(el.dataset.s!==s){el.dataset.s=s;el.className='pt '+s;el.querySelector('.stt').textContent=s==='done'?'Done':s==='on'?'Running':'Waiting';el.querySelector('.tm').textContent=s==='done'?fmtD(n.b-n.a):'';
+    if(s==='on'&&ptr.scrollWidth>ptr.clientWidth)ptr.scrollTo({left:el.offsetLeft-(ptr.clientWidth-el.offsetWidth)/2,behavior:reduce?'auto':'smooth'})}
+   el.style.setProperty('--f',Math.max(0,Math.min(1,(sim-n.a)/(n.b-n.a))))});
+  pc.textContent=sim<0?N.length+' steps':done+' of '+N.length+' steps done';
+  S.forEach((s,i)=>{const r=rows[i],w=Math.max(0,Math.min(sim,s.b)-s.a)/T*100;r.querySelector('.wb').style.width=w+'%';r.classList.toggle('on',sim>=s.a&&sim<s.b);r.classList.toggle('done',sim>=s.b);r.querySelector('.wd').textContent=sim>=s.b?fmtD(s.b-s.a):''});
+  const tr=rows[0].querySelector('.wt');now.style.opacity=sim>=0&&sim<T?1:0;now.style.left=(tr.offsetLeft+tr.offsetWidth*Math.max(0,Math.min(sim,T))/T)+'px';
+  lv[0].textContent=Math.max(0,Math.min(sim,T)).toFixed(1)+' s';lv[1].textContent=S.filter(s=>s.k==='tool'&&sim>=s.b).length+' / '+S.filter(s=>s.k==='tool').length;
+  lv[2].textContent=(sim<plan.a?0:Math.round(tok*Math.min(1,(sim-plan.a)/(T-plan.a)))).toLocaleString();lv[3].textContent=sim>=resp.a?evs.meta.cites:0;
+  if(shown===0&&evs[0].t<=sim)feed.innerHTML='';
+  while(shown<evs.length&&evs[shown].t<=sim){const h=lnHtml(evs[shown]);feed.insertAdjacentHTML('beforeend',h);mt.insertAdjacentHTML('beforeend',h);shown++;while(feed.children.length>5)feed.firstChild.remove()}};
+ $('#pp').onclick=()=>ptr.scrollBy({left:-230,behavior:'smooth'});$('#pn').onclick=()=>ptr.scrollBy({left:230,behavior:'smooth'});
+ ptr.onkeydown=e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();ptr.scrollBy({left:e.key==='ArrowLeft'?-230:230,behavior:'smooth'})}};
+ return {up,T}};
+const setTag=(s,txt)=>{const t=$('#lvtag');if(t){t.className='lvtag '+s;t.textContent=txt}const l=$('#lv');if(l)l.classList.toggle('live',s==='run')};
+const ucView=u=>{const f=fnOf(u.fn),c=st.chats[u.id]||[];
+ V.innerHTML='<div class="ws2"><div class="hd2"><div class="crumb"><a href="#home">Overview</a> / <a href="#'+f.id+'">'+f.name+'</a></div><div class="head"><div><h1>'+u.name+'</h1><p class="muted">'+u.blurb+'</p></div><div class="acts"><button class="ghost" data-go="how-'+u.id+'">Behind the scenes</button><button class="ghost" data-star="'+u.id+'" aria-pressed="'+st.star.has(u.id)+'">'+(st.star.has(u.id)?'On pilot shortlist':'Add to pilot shortlist')+'</button></div></div></div>'+
+ '<div class="chat glass"><div class="chd"><span class="cav"></span><div><b>'+u.name+'</b><span>'+f.name+' agent, powered by Gemini</span></div><span class="onl">Online</span></div><div class="msgs" id="msgs">'+(c.length?c.map(m=>'<div class="m '+m.r+'">'+(m.r==='a'?'<div class="who">'+u.name+'</div>':'')+m.h+'</div>').join(''):'<div class="m a"><div class="who">'+u.name+'</div><p>Hi, I\'m the '+u.name.toLowerCase()+' agent. I work with '+u.src.join(', ')+'. Pick a prompt below or ask your own.</p></div>')+'</div>'+
+ '<div class="sug" id="sug">'+u.qa.map((p,i)=>'<button data-qa="'+i+'" title="'+esc(p[0])+'">'+p[0]+'</button>').join('')+'</div>'+
+ '<form class="ask" id="ask"><input class="field" id="ai" placeholder="Ask the agent" aria-label="Ask the agent" autocomplete="off"><button class="btn" id="send">Send</button></form></div>'+
+ '<div class="plan card glass"><div class="ch"><div class="tt"><h3>Agent plan</h3><span class="fine" id="pcnt">'+(u.steps.length+3)+' steps</span></div><div class="nvb"><button class="pbtn" id="pp" aria-label="Scroll steps left">&#8249;</button><button class="pbtn" id="pn" aria-label="Scroll steps right">&#8250;</button></div></div><div id="flw"></div></div>'+
+ '<div class="trc card glass"><div class="ch"><div class="tt"><h3>Live trace</h3><span class="lvtag" id="lvtag">Ready</span></div><a class="fine" href="#how-'+u.id+'">Full behind-the-scenes view</a></div>'+
+ '<div class="lv" id="lv"><div id="lv0"><b>0.0 s</b><span>Elapsed</span></div><div id="lv1"><b>0 / '+u.src.length+'</b><span>Tool calls</span></div><div id="lv2"><b>0</b><span>Tokens</span></div><div id="lv3"><b>0</b><span>Citations</span></div></div>'+
+ '<div class="wfbox"><div id="wfw"></div><div class="wleg"><span><i class="k-req"></i>Request</span><span><i class="k-model"></i>Gemini</span><span><i class="k-tool"></i>Tool call</span><span><i class="k-guard"></i>Safety</span></div></div>'+
+ '<h4 class="fh">Latest events</h4><div class="feed" id="feed"></div><details class="all"><summary>All events</summary><div class="trace mini" id="mt"></div></details></div>'+
+ '<div class="abt about"><div class="card glass"><h3 style="margin-bottom:10px">Connected sources</h3><div class="chips">'+u.src.map(s=>'<span class="chip">'+s+'</span>').join('')+'</div></div>'+
+ '<div class="card glass"><h3 style="margin-bottom:10px">Pilot targets</h3><div class="kpis">'+u.kpi.map(k=>'<div class="kr"><span>'+k[0]+'</span><b>'+k[1]+'</b></div>').join('')+'</div><p class="note" style="margin:10px 0 0">Typical targets for a pilot, to be agreed with the customer.</p></div>'+
+ '<div class="card glass"><h3 style="margin-bottom:10px">Guardrails</h3><div class="guard">'+u.guard+'</div></div></div></div>';
+ const last=st.last[u.id],evs=last||events(u,u.qa[0][0]),vz=viz(u,evs);vz.up(last?vz.T:-1);if(last)setTag('ok','Completed');
+ const ms=$('#msgs');ms.scrollTop=ms.scrollHeight;
+ $('#sug').addEventListener('click',e=>{const b=e.target.closest('[data-qa]');if(b)run(u,u.qa[+b.dataset.qa][0],u.qa[+b.dataset.qa][1])});
+ $('#ask').addEventListener('submit',e=>{e.preventDefault();const t=$('#ai').value.trim();if(!t)return;$('#ai').value='';run(u,t,match(u,t))})};
+const match=(u,t)=>{const w=t.toLowerCase().split(/\W+/).filter(x=>x.length>3);let best=null,sc=0;u.qa.forEach(p=>{const n=w.filter(x=>p[0].toLowerCase().includes(x)).length;if(n>sc){sc=n;best=p[1]}});
+ return sc>=2?best:'<p>Here is how I would handle that. I would search '+u.src.join(', ')+', follow the plan on the right, and answer with citations to each source.</p><p>This workspace has worked examples for the prompts below the chat. In a live pilot I would answer this question from your connected data.</p>'};
+const run=(u,qText,ans)=>{if(st.busy)return;st.busy=true;const ms=$('#msgs'),evs=events(u,qText),vz=viz(u,evs);
+ const c=st.chats[u.id]=st.chats[u.id]||[];c.push({r:'u',h:esc(qText)});
+ ms.insertAdjacentHTML('beforeend','<div class="m u">'+esc(qText)+'</div><div class="m a" id="cur"><div class="who">'+u.name+'</div><div class="thinking"><i></i><i></i><i></i></div></div>');ms.scrollTop=ms.scrollHeight;
+ const cur=$('#cur');cur.removeAttribute('id');document.querySelectorAll('#send,#sug button').forEach(b=>b.disabled=true);
+ setTag('run','Running');const D=reduce?0:Math.max(9000,u.steps.length*1500+3600),t0=performance.now();
+ const loop=now=>{const sim=D?Math.min(vz.T,(now-t0)/D*vz.T):vz.T;if(document.body.contains(cur))vz.up(sim);if(sim<vz.T)requestAnimationFrame(loop);else{st.last[u.id]=evs;if(document.body.contains(cur))setTag('ok','Completed');stream()}};
+ const stream=()=>{cur.querySelector('.thinking').remove();const tp=document.createElement('template');tp.innerHTML=ans;const nodes=[...tp.content.children];let k=0;
+  const tick=()=>{if(k<nodes.length){cur.appendChild(nodes[k++]);ms.scrollTop=ms.scrollHeight;setTimeout(tick,reduce?0:320)}else fin()};tick()};
+ const fin=()=>{const log={t:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),u:u.name,q:qText,s:'Completed'};st.runs.unshift(log);
+  if(u.approve&&ans===u.qa[0][1]){const ap=document.createElement('div');ap.className='approve';ap.innerHTML='<span><b>Needs your approval:</b> '+u.approve+'</span><button class="btn">Approve</button><button class="ghost">Reject</button>';cur.appendChild(ap);
+   ap.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const okk=b.classList.contains('btn');ap.innerHTML=okk?OK+'Approved'+E+' <span>'+u.approve+'. Logged in governance.</span>':W+'Rejected'+E+' <span>No action taken. Logged in governance.</span>';log.s=okk?'Approved: '+u.approve:'Rejected';c[c.length-1].h=cur.innerHTML.replace('<div class="who">'+u.name+'</div>','')})}
+  c.push({r:'a',h:cur.innerHTML.replace('<div class="who">'+u.name+'</div>','')});ms.scrollTop=ms.scrollHeight;
+  st.busy=false;document.querySelectorAll('#send,#sug button').forEach(b=>b.disabled=false)};
+ requestAnimationFrame(loop)};
+const how=u=>{
+ V.innerHTML='<div class="head"><div><h1>Behind the scenes: one request, seven stages</h1><p class="muted">Pick an agent and run a request to watch what Gemini Enterprise does between the question and the answer: who is allowed to see what, which tools are called, and where a person stays in control.</p></div></div>'+
+ '<div class="ctrl glass"><label for="hs" class="fine" style="padding-left:6px">Agent</label><select class="field" id="hs">'+FN.map(f=>'<optgroup label="'+f.name+'">'+UC.filter(x=>x.fn===f.id).map(x=>'<option value="'+x.id+'"'+(x.id===u.id?' selected':'')+'>'+x.name+'</option>').join('')+'</optgroup>').join('')+'</select><button class="btn" id="hrun">Run request</button><button class="ghost" data-go="uc-'+u.id+'">Open agent</button></div>'+
+ '<p class="muted" style="margin:-6px 0 16px;font-size:15px">Request: "'+esc(u.qa[0][0])+'"</p>'+
+ '<div class="route glass" id="route"><div class="track" id="trk"><b></b><i></i></div>'+STAGES.map((s,i)=>'<button class="stage glass hov" data-st="'+i+'"><span class="sn"><svg class="ico"><use href="#i-'+['user','lock','eye','spark','db','shield','chat'][i]+'"/></svg></span><h3>'+s.t+'</h3><p>'+s.d+'</p></button>').join('')+'</div>'+
+ '<div class="two"><div class="card glass"><div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-tab="tr">Event trace</button><button role="tab" aria-selected="false" data-tab="cx">Context sent to Gemini</button></div><div id="tr" class="trace"><p class="fine" style="font-family:Inter,sans-serif">Press Run request. Each stage writes its events here as it runs.</p></div><pre id="cx" class="ctx" hidden>'+ctxText(u,u.qa[0][0])+'</pre></div>'+
+ '<div class="side-p"><div class="card glass det" id="det"></div><div class="figs" id="hf" style="margin:0"><div class="fg glass"><b>-</b><span>Latency</span></div><div class="fg glass"><b>-</b><span>Tool calls</span></div><div class="fg glass"><b>-</b><span>Citations</span></div><div class="fg glass"><b>-</b><span>Approval</span></div></div></div></div>'+
+ '<p class="note">Illustrative reference flow with synthetic events. Exact components depend on the Gemini Enterprise edition and the agent design.</p>';
+ const det=i=>{const s=STAGES[i];$('#det').innerHTML='<p class="fine" style="margin-bottom:6px">Stage '+(i+1)+' of 7</p><h3>'+s.t+'</h3><p>'+s.long+'</p><div class="chips">'+s.tech.map(t=>'<span class="chip">'+t+'</span>').join('')+'</div>'};det(0);
+ const tiles=[...document.querySelectorAll('.stage')],trk=$('#trk'),tr=$('#tr');
+ $('#route').addEventListener('click',e=>{const b=e.target.closest('[data-st]');if(b&&!st.howBusy)det(+b.dataset.st)});
+ $('#hs').addEventListener('change',e=>{location.hash='how-'+e.target.value});
+ document.querySelector('.tabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(!b)return;document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));$('#tr').hidden=b.dataset.tab!=='tr';$('#cx').hidden=b.dataset.tab!=='cx'});
+ $('#hrun').addEventListener('click',async()=>{if(st.howBusy)return;st.howBusy=true;const btn=$('#hrun');btn.disabled=true;const evs=events(u,u.qa[0][0]);tr.innerHTML='';tiles.forEach(t=>t.className='stage glass hov');
+  for(let i=0;i<7;i++){if(!document.body.contains(tr))break;tiles[i].classList.add('on');det(i);trk.style.setProperty('--p',(i/6*100)+'%');
+   for(const e of evs.filter(x=>x.s===i)){tr.insertAdjacentHTML('beforeend',lnHtml(e));tr.scrollTop=tr.scrollHeight;await sleep(260)}
+   await sleep(900);tiles[i].classList.remove('on');tiles[i].classList.add('done')}
+  if(document.body.contains(tr)){const m=evs.meta,f=$('#hf').children;f[0].firstChild.textContent=m.lat+' s';f[1].firstChild.textContent=m.tools;f[2].firstChild.textContent=m.cites;f[3].firstChild.textContent=u.approve?'Needed':'None';
+   st.runs.unshift({t:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),u:u.name,q:u.qa[0][0]+' (behind the scenes replay)',s:u.approve?'Held for approval':'Completed'});btn.disabled=false;btn.textContent='Run again'}
+  st.howBusy=false})};
+const pilot=()=>{const us=UC.filter(u=>st.star.has(u.id)).sort((a,b)=>(b.i+b.e)-(a.i+a.e));
+ V.innerHTML='<div class="head"><div><h1>Pilot shortlist</h1><p class="muted">'+us.length+' use cases shortlisted, phased by impact plus ease. Add more from any agent page.</p></div>'+(us.length?'<button class="ghost" id="cp">Copy summary</button>':'')+'</div>'+
+ (us.length?'<div class="card glass"><div class="scroll"><table><thead><tr><th>Use case</th><th>Function</th><th class="n">Impact</th><th class="n">Ease</th><th>Suggested phase</th><th></th></tr></thead><tbody>'+us.map(u=>'<tr><td><a href="#uc-'+u.id+'" style="font-weight:600;text-decoration:none">'+u.name+'</a></td><td>'+fnOf(u.fn).name+'</td><td class="n">'+u.i.toFixed(1)+'</td><td class="n">'+u.e.toFixed(1)+'</td><td>'+phase(u)+'</td><td><button class="ghost" data-star="'+u.id+'">Remove</button></td></tr>').join('')+'</tbody></table></div></div><p class="fine" id="cpm" style="margin-top:10px"></p>':'<div class="empty">Nothing shortlisted yet. Open a function and choose Shortlist on the use cases you want to pilot.</div>')+
+ '<h2 style="margin:28px 0 14px">Suggested additions</h2><div class="grid">'+UC.filter(u=>!st.star.has(u.id)&&qw(u)).slice(0,6).map(ucCard).join('')+'</div>';
+ const cp=$('#cp');if(cp)cp.addEventListener('click',()=>{const txt='Gemini Enterprise pilot shortlist\n'+us.map((u,i)=>(i+1)+'. '+u.name+' ('+fnOf(u.fn).name+') - '+phase(u)+' - impact '+u.i+', ease '+u.e).join('\n');
+  navigator.clipboard.writeText(txt).then(()=>{$('#cpm').textContent='Summary copied.'},()=>{$('#cpm').textContent='Copy is blocked here. Select the table and copy it instead.'})})};
+const gov=()=>{const act=UC.filter(u=>u.approve).length;
+ V.innerHTML='<div class="head"><div><h1>Agent governance</h1><p class="muted">Every agent, what it can read, what it can do, and every run in this session. Agents that take actions wait for a person to approve.</p></div></div>'+
+ '<div class="figs"><div class="fg glass hov"><b>'+UC.length+'</b><span>Registered agents</span></div><div class="fg glass hov"><b>'+(UC.length-act)+'</b><span>Read or draft only</span></div><div class="fg glass hov"><b>'+act+'</b><span>Actions with approval</span></div><div class="fg glass hov"><b>'+st.runs.length+'</b><span>Runs logged</span></div></div>'+
+ '<div class="card glass" style="margin-bottom:20px"><h2 style="margin-bottom:12px">Activity log</h2>'+(st.runs.length?'<div class="scroll"><table><thead><tr><th>Time</th><th>Agent</th><th>Request</th><th>Outcome</th></tr></thead><tbody>'+st.runs.map(r=>'<tr><td style="white-space:nowrap">'+r.t+'</td><td>'+esc(r.u)+'</td><td>'+esc(r.q)+'</td><td>'+esc(r.s)+'</td></tr>').join('')+'</tbody></table></div>':'<div class="empty">No runs yet. Open any agent and try a prompt; it will appear here.</div>')+'</div>'+
+ '<div class="card glass"><h2 style="margin-bottom:12px">Agent registry</h2><div class="scroll"><table><thead><tr><th>Agent</th><th>Function</th><th>Data sources</th><th>Mode</th><th>Guardrail</th></tr></thead><tbody>'+UC.map(u=>'<tr><td><a href="#uc-'+u.id+'" style="text-decoration:none;font-weight:600">'+u.name+'</a></td><td>'+fnOf(u.fn).short+'</td><td>'+u.src.join(', ')+'</td><td>'+(u.approve?W+'Action, approval'+E:OK+'Read or draft'+E)+'</td><td>'+u.guard+'</td></tr>').join('')+'</tbody></table></div></div>'};
+
+/* router */
+const route=()=>{if(ss.get('ntt-auth')!=='1'){showLogin();return}
+ const h=location.hash.slice(1)||'home';let cur=h;
+ if(h.startsWith('uc-')&&ucOf(h.slice(3))){const u=ucOf(h.slice(3));ucView(u);cur=u.fn}
+ else if(h==='how'||(h.startsWith('how-')&&ucOf(h.slice(4)))){how(ucOf(h.slice(4))||ucOf('fin-ap'));cur='how'}
+ else if(fnOf(h))fnView(fnOf(h));else if(h==='pilot')pilot();else if(h==='governance')gov();else{home();cur='home'}
+ document.body.classList.toggle('rail',st.rail!==undefined?st.rail:h.startsWith('uc-'));
+ side.querySelectorAll('[data-go]').forEach(b=>{if(b.dataset.go===cur)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+ $('#sc').textContent=st.star.size;document.querySelector('.shell main').scrollTop=0;V.classList.remove('anim');void V.offsetWidth;V.classList.add('anim')};
+V.addEventListener('click',e=>{const o=e.target.closest('[data-open]'),s=e.target.closest('[data-star]'),g=e.target.closest('[data-go]');
+ if(o)location.hash='uc-'+o.dataset.open;
+ else if(s){const id=s.dataset.star;st.star.has(id)?st.star.delete(id):st.star.add(id);$('#sc').textContent=st.star.size;const h=location.hash.slice(1);if(h==='pilot')pilot();else if(h.startsWith('uc-')){s.setAttribute('aria-pressed',st.star.has(id));s.textContent=st.star.has(id)?'On pilot shortlist':'Add to pilot shortlist'}else{s.setAttribute('aria-pressed',st.star.has(id));s.textContent=st.star.has(id)?'Shortlisted':'Shortlist'}}
+ else if(g)location.hash=g.dataset.go});
+addEventListener('hashchange',route);
+if(ss.get('ntt-auth')==='1')showApp();else showLogin();
+}
+</script>
+</body>
+</html>
