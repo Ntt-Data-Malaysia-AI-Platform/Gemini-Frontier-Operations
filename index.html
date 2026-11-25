@@ -650,6 +650,18 @@ body.pro .feed{background:rgba(255,255,255,.6);border-color:rgba(255,255,255,.9)
 body.pro .wt{background:rgba(0,90,160,.08)}
 body.pro .figs .fg b{background:linear-gradient(180deg,#0b1f3a 40%,#0072bc);-webkit-background-clip:text;background-clip:text;color:transparent}
 body.pro .side,body.pro .topnav{border-radius:0}
+
+/* chat docked to the window so it always fits */
+:root{--chatw:clamp(360px,33vw,500px)}
+@media(min-width:1001px){
+ #view:has(.ws2){max-width:none}
+ #view.anim>.ws2{animation:none}
+ .ws2{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "plan" "trace" "about";padding-right:calc(var(--chatw) + 22px)}
+ .ws2>.chat{position:fixed;z-index:4;top:calc(var(--navh,64px) + 14px);bottom:14px;right:22px;width:var(--chatw);height:auto;min-height:0}
+}
+@media(max-width:1000px){.ws2>.chat{height:min(680px,calc(100dvh - 24px));min-height:420px}}
+.chat .chd,.chat .sug,.chat .ask{flex:none}
+.chd>div{min-width:0;flex:1}.chd>div>b,.chd>div>span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 </style>
 </head>
 <body class="night">
@@ -934,9 +946,9 @@ const showApp=()=>{document.body.classList.remove('night');document.body.classLi
 const showLogin=()=>{document.body.classList.add('night');document.body.classList.remove('pro');$('#app').hidden=true;$('#login').hidden=false;$('#u').focus()};
 $('#pt').addEventListener('click',()=>{const p=$('#p'),v=p.type==='password';p.type=v?'text':'password';$('#pt').textContent=v?'Hide':'Show';$('#pt').setAttribute('aria-label',v?'Hide password':'Show password')});
 $('#lf').addEventListener('submit',e=>{e.preventDefault();const u=$('#u').value.trim(),p=$('#p').value;
- if(u==='Nttdata'&&p==='Nttdata@123!@#'){$('#lerr').textContent='';ss.set('ntt-auth','1');$('#p').value='';showApp()}
+ if(u.toLowerCase()==='nttdata'&&(p==='Nttdata@123!@#'||p.trim()==='Nttdata@123!@#')){$('#lerr').textContent='';st.auth=true;ss.set('ntt-auth','1');$('#p').value='';showApp()}
  else{$('#lerr').textContent=!u||!p?'Enter your username and password.':'Username or password is incorrect.';$('#p').select()}});
-$('#out').addEventListener('click',()=>{ss.del('ntt-auth');location.hash='';showLogin()});
+$('#out').addEventListener('click',()=>{st.auth=false;ss.del('ntt-auth');location.hash='';showLogin()});
 
 /* sidebar */
 const side=$('#side');
@@ -1073,7 +1085,7 @@ const gov=()=>{const act=UC.filter(u=>u.approve).length;
  '<div class="card glass"><h2 style="margin-bottom:12px">Agent registry</h2><div class="scroll"><table><thead><tr><th>Agent</th><th>Function</th><th>Data sources</th><th>Mode</th><th>Guardrail</th></tr></thead><tbody>'+UC.map(u=>'<tr><td><a href="#uc-'+u.id+'" style="text-decoration:none;font-weight:600">'+u.name+'</a></td><td>'+fnOf(u.fn).short+'</td><td>'+u.src.join(', ')+'</td><td>'+(u.approve?W+'Action, approval'+E:OK+'Read or draft'+E)+'</td><td>'+u.guard+'</td></tr>').join('')+'</tbody></table></div></div>'};
 
 /* router */
-const route=()=>{if(ss.get('ntt-auth')!=='1'){showLogin();return}
+const route=()=>{if(!st.auth&&ss.get('ntt-auth')!=='1'){showLogin();return}
  const h=location.hash.slice(1)||'home';let cur=h;
  if(h.startsWith('uc-')&&ucOf(h.slice(3))){const u=ucOf(h.slice(3));ucView(u);cur=u.fn}
  else if(h==='how'||(h.startsWith('how-')&&ucOf(h.slice(4)))){how(ucOf(h.slice(4))||ucOf('fin-ap'));cur='how'}
@@ -1086,7 +1098,7 @@ V.addEventListener('click',e=>{const o=e.target.closest('[data-open]'),s=e.targe
  else if(s){const id=s.dataset.star;st.star.has(id)?st.star.delete(id):st.star.add(id);$('#sc').textContent=st.star.size;const h=location.hash.slice(1);if(h==='pilot')pilot();else if(h.startsWith('uc-')){s.setAttribute('aria-pressed',st.star.has(id));s.textContent=st.star.has(id)?'On pilot shortlist':'Add to pilot shortlist'}else{s.setAttribute('aria-pressed',st.star.has(id));s.textContent=st.star.has(id)?'Shortlisted':'Shortlist'}}
  else if(g)location.hash=g.dataset.go});
 addEventListener('hashchange',route);
-if(ss.get('ntt-auth')==='1')showApp();else showLogin();
+if(ss.get('ntt-auth')==='1'){st.auth=true;showApp()}else showLogin();
 }
 </script>
 </body>
